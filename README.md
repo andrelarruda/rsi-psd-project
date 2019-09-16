@@ -19,4 +19,5 @@
 7 - realizar o pull request no github.com 
 ```
 # referências:
-- https://rogerdudler.github.io/git-guide/index.pt_BR.html
+- [Guia prático](https://rogerdudler.github.io/git-guide/index.pt_BR.html)
+- [Documentação](https://git-scm.com/doc)
