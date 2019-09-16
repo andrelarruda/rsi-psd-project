@@ -1,6 +1,6 @@
 # rsi-psd-project
 
-# Configurqção de maquina:
+# Configuração de maquina:
 
 1 - git clone https://github.com/andrelarruda/rsi-psd-project.git
 2 - git config --global user.email "your email on git"
