@@ -16,12 +16,13 @@ value_serializer=lambda v: str(v).encode('utf-8'))
 arquivos = ["A301.csv", "A307.csv", "A309.csv", "A322.csv", "A328.csv", "A329.csv", "A341.csv", "A349.csv", "A350.csv", 
 "A351.csv", "A357.csv", "A366.csv", "A370.csv"]
 
+csv1_path = variaveis.csv1_path
+
 for file in arquivos:
-    csv1_path = os.path.join(os.path.expanduser('~'), variaveis.var1, variaveis.var2, variaveis.var3, file)
     #dataframe = pd.read_csv("F:/sample.csv", usecols=['id', 'First Name', 'Last Name', 'Email', 'Desciption', 'Role', 'Boss ID', 'Phone'], sep=',')
 
     #dataframe de empenhos
-    dataframe = pd.read_csv(csv1_path,
+    dataframe = pd.read_csv(csv1_path + os.sep + file,
                             #Colunas que serão lidas
                             usecols=['timestamp', 'stationCode', 'stationName', 'latitude', 'longitude', 'umid_max',
                                         'umid_min', 'temp_max', 'pressao', 'pressao_min', 'pto_orvalho_inst',
@@ -29,10 +30,10 @@ for file in arquivos:
                                         'temp_inst', 'umid_inst', 'precipitacao'],
                             sep=',',
                             #Tipo das colunas
-                            dtype={'timestamp': int, 'stationCode': str, 'stationName': str, 'latitude': float, 'longitude': float, 'umid_max': int,
-                                        'umid-min': int, 'temp_max': float, 'pressao': float, 'pressao_min': float, 'pto_orvalho_inst': float,
+                            dtype={'timestamp': str, 'stationCode': str, 'stationName': str, 'latitude': float, 'longitude': float, 'umid_max': float,
+                                        'umid-min': float, 'temp_max': float, 'pressao': float, 'pressao_min': float, 'pto_orvalho_inst': float,
                                         'pto_orvalho_max': float, 'radiacao': float, 'temp_min': float, 'pressao_max': float, 'pto_orvalho_min': float,
-                                        'temp_inst': float, 'umid_inst': int, 'precipitacao': float})
+                                        'temp_inst': float, 'umid_inst': float, 'precipitacao': float})
 
     for element in dataframe.values:
         mensagem = str(element[17]) + " " + str(element[16])
