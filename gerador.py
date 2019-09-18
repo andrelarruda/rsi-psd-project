@@ -36,9 +36,9 @@ for file in arquivos:
                                         'temp_inst': float, 'umid_inst': float, 'precipitacao': float})
 
     for element in dataframe.values:
-        mensagem = str(element[17]) + " " + str(element[16])
+        mensagem = element[0] + " " + str(element[17]) + " " + str(element[16])
         print(mensagem)
-        producer.send(element[1] +".humidade.temperatura", mensagem )
+        producer.send(element[1] +".timestamp.humidade.temperatura", mensagem )
         time.sleep(1 / taxa)
 
 
