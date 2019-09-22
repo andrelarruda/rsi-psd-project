@@ -1,63 +1,57 @@
-from kafka import KafkaConsumer
-from json import loads
-import faust
+from kafka  import KafkaConsumer
+from json   import loads
 import paho.mqtt.client as paho 
 import time
 
-# Faust
-class Total(faust.Record):
-     total: str
+topicos = []
+dados   = None
 
-app = faust.App('myapp', broker='kafka://localhost:9092')
-click_topic = app.topic(key_type=str, value_type=Total)
-@app.agent(click_topic)
-async def hello(totals):
-    async for line in totals:
-        print(f'Hello from {line.total}')
-
-if __name__ == '__main__':
-    app.main()
-'''
-#Paho
-ACCESS_TOKEN = 'RJJLwCPZxdn7yuon6FhA'  
-broker = "localhost" 
-port = 1883 
-
+# Thingsboard log
 def on_publish(client, userdata, result):
     print("data published to thingsboard \n")
     pass
 
-client1 = paho.Client("control1")  
-client1.connect(broker, port, keepalive=60)
+# Paho Config const
+ACCESS_TOKEN    = "RJJLwCPZxdn7yuon6FhA"  
+BROKER          = "localhost" 
+PORT            = 1883 
+
+# Kafka Config const
+CLIENT_NAME     = "control1"
+SERVER          = "localhost:9092"
+AUTO_OFFSET     = "earliest"
+MY_GROUP        = "my-group"
+
+client1 = paho.Client(CLIENT_NAME)  
+client1.connect(BROKER, PORT, keepalive=60)
 client1.username_pw_set(ACCESS_TOKEN)
 client1.on_publish = on_publish 
-client1.loop_start() 
 
-lista= [1000, 2000, 3000, 4000]
-
-for i in range(len(lista)): 
-    payload = '{"temperature":' + str(lista[i]) + ', "humidity":5000, "teste": Gabriel}'
-    ret = client1.publish("v1/devices/me/telemetry", payload)  
-    print("Please check LATEST TELEMETRY field of your device")
-    print(ret)
-    print(payload)
-    time.sleep(5)
-
-client1.loop_stop()
-'''
-'''
+# Consumer Config
 consumer = KafkaConsumer(
-     bootstrap_servers=['localhost:9092'],
-     auto_offset_reset='earliest',
-     enable_auto_commit=True,
-     group_id='my-group',
-     value_deserializer=lambda v: str(v).encode('utf-8'))
+     bootstrap_servers  = [SERVER],
+     auto_offset_reset  = AUTO_OFFSET,
+     enable_auto_commit = True,
+     group_id           = MY_GROUP,
+     value_deserializer = lambda v: v.decode('utf-8'))
 
 consumer.subscribe(pattern=".+")
 
-for message in consumer:
-    print(message.topic)
-    message = message.value
-    print('received: ' + str(message))
+client1.loop_start()
 
-'''
+for message in consumer:
+    temp    = message.topic
+    topicos = temp.split(".")
+    dados   = message.value
+    dados   = dados.split(" ")
+    
+    # Logs
+    print(topicos)
+    print(message)
+    
+    # Thingsboard's messages
+    payload = '{"timestamp":' + str(dados[0]) + ', "humidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}'
+    ret = client1.publish("v1/devices/me/telemetry", payload)  
+    print(ret)
+    time.sleep(5)
+client1.loop_stop()
