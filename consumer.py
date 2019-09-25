@@ -35,7 +35,7 @@ consumer = KafkaConsumer(
      group_id           = MY_GROUP,
      value_deserializer = lambda v: v.decode('utf-8'))
 
-consumer.subscribe(pattern=".+")
+consumer.subscribe(pattern="^.*timestamp.humidade.temperatura")
 
 client1.loop_start()
 

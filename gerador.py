@@ -36,7 +36,6 @@ for file in arquivos:
                                         'pto_orvalho_max': float, 'radiacao': float, 'temp_min': float, 'pressao_max': float, 'pto_orvalho_min': float,
                                         'temp_inst': float, 'umid_inst': float, 'precipitacao': float}))
 big_frame = pd.concat(dataframe, ignore_index=True, sort=False )
-#big_frame = big_frame.set_index(['timestamp', 'stationCode'])
 big_frame = big_frame.sort_values('timestamp')
 
 print(big_frame)
