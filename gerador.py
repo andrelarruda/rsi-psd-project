@@ -17,12 +17,13 @@ arquivos = ["A301.csv", "A307.csv", "A309.csv", "A322.csv", "A328.csv", "A329.cs
 "A351.csv", "A357.csv", "A366.csv", "A370.csv"]
 
 csv1_path = variaveis.csv1_path
+dataframe = []
 
 for file in arquivos:
     #dataframe = pd.read_csv("F:/sample.csv", usecols=['id', 'First Name', 'Last Name', 'Email', 'Desciption', 'Role', 'Boss ID', 'Phone'], sep=',')
 
     #dataframe de empenhos
-    dataframe = pd.read_csv(csv1_path + os.sep + file,
+    dataframe.append(pd.read_csv(csv1_path + os.sep + file,
                             #Colunas que serão lidas
                             usecols=['timestamp', 'stationCode', 'stationName', 'latitude', 'longitude', 'umid_max',
                                         'umid_min', 'temp_max', 'pressao', 'pressao_min', 'pto_orvalho_inst',
@@ -30,16 +31,17 @@ for file in arquivos:
                                         'temp_inst', 'umid_inst', 'precipitacao'],
                             sep=',',
                             #Tipo das colunas
-                            dtype={'timestamp': str, 'stationCode': str, 'stationName': str, 'latitude': float, 'longitude': float, 'umid_max': float,
+                            dtype={'timestamp': int, 'stationCode': str, 'stationName': str, 'latitude': float, 'longitude': float, 'umid_max': float,
                                         'umid-min': float, 'temp_max': float, 'pressao': float, 'pressao_min': float, 'pto_orvalho_inst': float,
                                         'pto_orvalho_max': float, 'radiacao': float, 'temp_min': float, 'pressao_max': float, 'pto_orvalho_min': float,
-                                        'temp_inst': float, 'umid_inst': float, 'precipitacao': float})
+                                        'temp_inst': float, 'umid_inst': float, 'precipitacao': float}))
+big_frame = pd.concat(dataframe, ignore_index=True, sort=False )
+#big_frame = big_frame.set_index(['timestamp', 'stationCode'])
+big_frame = big_frame.sort_values('timestamp')
 
-    for element in dataframe.values:
-        mensagem = element[0] + " " + str(element[17]) + " " + str(element[16])
-        print(mensagem)
-        producer.send(element[1] +".timestamp.humidade.temperatura", mensagem )
-        time.sleep(1 / taxa)
-
-
-#    dataframe.to_sql('intermediaria_empenho', conn, if_exists='replace')
+print(big_frame)
+for element in big_frame.values:
+    mensagem = str(element[0]) + " " + str(element[17]) + " " + str(element[16])
+    print(mensagem)
+    producer.send(element[1] +".timestamp.humidade.temperatura", mensagem )
+    time.sleep(1 / taxa)

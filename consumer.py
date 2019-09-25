@@ -47,11 +47,12 @@ for message in consumer:
     
     # Logs
     print(topicos)
-    print(message)
+    print(dados)
     
     # Thingsboard's messages
-    payload = '{"timestamp":' + str(dados[0]) + ', "humidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}'
+    payload = '{"ts":' + str(dados[0]) + ', "values": {"humidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}}'
+    print(payload)
     ret = client1.publish("v1/devices/me/telemetry", payload)  
-    print(ret)
+    #print(ret)
     time.sleep(5)
 client1.loop_stop()
