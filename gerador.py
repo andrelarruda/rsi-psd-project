@@ -8,7 +8,9 @@ import os
 import time
 import variaveis
 
-taxa = int(input("Digite a taxa de velocidade: "))
+# speedupFactor = int(input("Digite o fator de aceleração: "))
+speedupFactor = 3600 #Para fins de teste, este valor será fixo.
+delta = 3600/speedupFactor #delta = interval/speedup factor
 
 producer = KafkaProducer(bootstrap_servers='localhost:9092', 
 value_serializer=lambda v: str(v).encode('utf-8'))
@@ -38,9 +40,9 @@ for file in arquivos:
 big_frame = pd.concat(dataframe, ignore_index=True, sort=False )
 big_frame = big_frame.sort_values('timestamp')
 
-print(big_frame)
+# print(big_frame)
 for element in big_frame.values:
     mensagem = str(element[0]) + " " + str(element[17]) + " " + str(element[16])
     print(mensagem)
     producer.send(element[1] +".timestamp.humidade.temperatura", mensagem )
-    time.sleep(1 / taxa)
+    time.sleep(delta)

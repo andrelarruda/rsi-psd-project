@@ -12,8 +12,8 @@ def on_publish(client, userdata, result):
     pass
 
 # Paho Config const
-ACCESS_TOKEN    = "RJJLwCPZxdn7yuon6FhA"  
-BROKER          = "localhost" 
+ACCESS_TOKEN    = "p4Uj97oCe9JSHaGtLMRz"  
+BROKER          = "localhost"
 PORT            = 1883 
 
 # Kafka Config const
