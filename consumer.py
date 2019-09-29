@@ -46,8 +46,8 @@ for message in consumer:
     dados   = dados.split(" ")
     
     # Logs
-    print(topicos)
-    print(dados)
+#     print(topicos)
+#     print(dados)
     
     # Thingsboard's messages
     payload = '{"ts":' + str(dados[0]) + ', "values": {"humidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}}'
