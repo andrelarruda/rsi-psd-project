@@ -1,5 +1,6 @@
 from kafka  import KafkaConsumer
 from json   import loads
+
 import paho.mqtt.client as paho 
 import time
 
@@ -29,7 +30,7 @@ client1.on_publish = on_publish
 
 # Consumer Config
 consumer = KafkaConsumer(
-     bootstrap_servers  = [SERVER],
+     bootstrap_servers  = [SERVER]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ,
      auto_offset_reset  = AUTO_OFFSET,
      enable_auto_commit = True,
      group_id           = MY_GROUP,
@@ -45,14 +46,10 @@ for message in consumer:
     dados   = message.value
     dados   = dados.split(" ")
     
-    # Logs
-#     print(topicos)
-#     print(dados)
-    
     # Thingsboard's messages
     payload = '{"ts":' + str(dados[0]) + ', "values": {"humidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}}'
     print(payload)
-    ret = client1.publish("v1/devices/me/telemetry", payload)  
-    #print(ret)
+    ret = client1.publish("v1/devices/me/telemetry", payload)
     time.sleep(5)
+
 client1.loop_stop()
