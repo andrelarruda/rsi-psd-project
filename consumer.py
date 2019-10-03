@@ -13,12 +13,13 @@ def on_publish(client, userdata, result):
     pass
 
 # Paho Config const
+CLIENT_NAME     = "control1"
 ACCESS_TOKEN    = "kgWZAdFuWLc8DJRpjkfG"  
 BROKER          = "localhost"
 PORT            = 1883 
 
 # Kafka Config const
-CLIENT_NAME     = "control1"
+
 SERVER          = "localhost:9092"
 AUTO_OFFSET     = "latest"
 MY_GROUP        = "my-group"
