@@ -3,6 +3,7 @@ from json   import loads
 
 import paho.mqtt.client as paho 
 import time
+from identificador import Devices
 
 topicos = []
 dados   = None
@@ -39,18 +40,21 @@ consumer = KafkaConsumer(
 
 consumer.subscribe(pattern="^.*timestamp.humidade.temperatura")
 
-client1.loop_start()
+dev = Devices()
 
-for message in consumer:
-    temp    = message.topic
-    topicos = temp.split(".")
-    dados   = message.value
-    dados   = dados.split(" ")
-    
-    # Thingsboard's messages
-    payload = '{"ts":' + str(dados[0]) + ', "values": {"humidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}}'
-    print(payload)
-    ret = client1.publish("v1/devices/me/telemetry", payload)
-    time.sleep(5)
+#client1.loop_start()
+while True:
+    for message in consumer:
+        temp    = message.topic
+        topicos = temp.split(".")
+        dados   = message.value
+        dados   = dados.split(" ")
+        
+        # Thingsboard's messages
+        payload = '{"ts":' + str(dados[0]) + ', "values": {"humidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}}'
+        #print(payload)
+        print("device " + topicos[0])
+        dev.teste(topicos, payload)
+        #ret = client1.publish("v1/devices/me/telemetry", payload)
 
-client1.loop_stop()
+#client1.loop_stop()
