@@ -24,10 +24,12 @@ class Devices():
         for client in self._clients:
             current_client = str(client._client_id, "UTF8")
             if current_client == code:
-                print("-> " + str(client._client_id, "UTF8"))
+                client.loop_start()
+                time.sleep(5)
                 ret = client.publish(thingsboard, payload, retain= True)
                 print(ret.is_published())
-                time.sleep(5)
+                
+
                 break
 
     def connect(self):
@@ -39,7 +41,7 @@ class Devices():
             client.connect(self._broker,self._port, keepalive=60)
             client.on_publish = self.on_publish
             client.username_pw_set(self._tokens[i])
-            client.loop_start()
+            
         
         self._connect_flag = True
     

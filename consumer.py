@@ -54,7 +54,7 @@ while True:
         payload = '{"ts":' + str(dados[0]) + ', "values": {"humidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}}'
         #print(payload)
         print("device " + topicos[0])
-        dev.teste(topicos, payload)
+        dev.publicar(topicos, payload)
         #ret = client1.publish("v1/devices/me/telemetry", payload)
 
 #client1.loop_stop()
