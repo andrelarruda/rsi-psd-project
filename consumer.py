@@ -38,7 +38,7 @@ consumer = KafkaConsumer(
      group_id           = MY_GROUP,
      value_deserializer = lambda v: v.decode('utf-8'))
 
-consumer.subscribe(pattern="^.*timestamp.humidade.temperatura")
+consumer.subscribe(pattern="^.*timestamp.umidade.temperatura")
 
 dev = Devices()
 
@@ -51,10 +51,10 @@ while True:
         dados   = dados.split(" ")
         
         # Thingsboard's messages
-        payload = '{"ts":' + str(dados[0]) + ', "values": {"humidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}}'
+        payload = '{"ts":' + str(dados[0]) + ', "values": {"umidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}}'
         #print(payload)
-        print("device " + topicos[0])
+        #print("device " + topicos[0])
         dev.publicar(topicos, payload)
-        #ret = client1.publish("v1/devices/me/telemetry", payload)
+        
 
-#client1.loop_stop()
+

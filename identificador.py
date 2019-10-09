@@ -27,19 +27,17 @@ class Devices():
                 client.loop_start()
                 time.sleep(5)
                 ret = client.publish(thingsboard, payload, retain= True)
-                print(ret.is_published())
-                
-
                 break
 
     def connect(self):
+
         for i  in self._tokens.keys():
             cname= str(i)
             client= mqtt.Client(cname)
-            self._clients.append(client)
-        for client in self._clients:
             client.connect(self._broker,self._port, keepalive=60)
             client.on_publish = self.on_publish
             client.username_pw_set(self._tokens[i])
-            
+
+            self._clients.append(client)
+
         self._connect_flag = True
