@@ -42,25 +42,4 @@ class Devices():
             client.on_publish = self.on_publish
             client.username_pw_set(self._tokens[i])
             
-        
         self._connect_flag = True
-    
-    
-
-'''
-
-def publicador(topico, dados):
-    cidades = ["A301", "A307", "A309", "A322", "A328", "A329", "A341", "A349", "A350", 
-    "A351", "A357", "A366", "A370"]
-    clients = []
-    mqtt.Client.connected_flag = False
-    
-    #create clients
-    for i  in cidades:
-        cname="Client_"+str(i)
-        client= mqtt.Client(cname)
-        clients.append(client)
-    for client in clients:
-        client.connect(broker)
-        client.loop_start()
-'''        
