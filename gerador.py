@@ -40,5 +40,5 @@ big_frame = big_frame.sort_values('timestamp')
 for element in big_frame.values:
     mensagem = str(element[0]) + " " + str(element[17]) + " " + str(element[16])
     print(mensagem)
-    producer.send(element[1] +".timestamp.humidade.temperatura", mensagem )
+    producer.send(element[1] +".timestamp.umidade.temperatura", mensagem )
     time.sleep(delta)
