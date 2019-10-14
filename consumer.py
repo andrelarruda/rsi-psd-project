@@ -21,7 +21,7 @@ PORT            = 1883
 
 # Kafka Config const
 
-SERVER          = "localhost:9092"
+SERVER          = "172.16.205.131:9092" #"localhost:9092"
 AUTO_OFFSET     = "latest"
 MY_GROUP        = "my-group"
 
@@ -42,7 +42,6 @@ consumer.subscribe(pattern="^.*timestamp.umidade.temperatura")
 
 dev = Devices()
 
-#client1.loop_start()
 while True:
     for message in consumer:
         temp    = message.topic
@@ -52,6 +51,8 @@ while True:
         
         # Thingsboard's messages
         payload = '{"ts":' + str(dados[0]) + ', "values": {"umidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}}'
+        # O script do Spark será chamado aqui
+
         #print(payload)
         #print("device " + topicos[0])
         dev.publicar(topicos, payload)

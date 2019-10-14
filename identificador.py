@@ -27,6 +27,7 @@ class Devices():
                 client.loop_start()
                 time.sleep(5)
                 ret = client.publish(thingsboard, payload, retain= True)
+                print(ret)
                 break
 
     def connect(self):
