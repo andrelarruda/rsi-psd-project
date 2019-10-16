@@ -51,10 +51,6 @@ while True:
         
         # Thingsboard's messages
         payload = '{"ts":' + str(dados[0]) + ', "values": {"umidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}}'
-        # O script do Spark será chamado aqui
-
-        #print(payload)
-        #print("device " + topicos[0])
         dev.publicar(topicos, payload)
         
 
