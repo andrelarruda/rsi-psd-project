@@ -25,7 +25,7 @@ class Devices():
             current_client = str(client._client_id, "UTF8")
             if current_client == code:
                 client.loop_start()
-                time.sleep(5)
+                #time.sleep(5)
                 ret = client.publish(thingsboard, payload, retain= True)
                 print(ret)
                 break

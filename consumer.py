@@ -21,7 +21,7 @@ PORT            = 1883
 
 # Kafka Config const
 
-SERVER          = "localhost:9092"
+SERVER          = "172.16.205.131:9092"
 AUTO_OFFSET     = "latest"
 MY_GROUP        = "my-group"
 
@@ -51,6 +51,7 @@ while True:
         
         # Thingsboard's messages
         payload = '{"ts":' + str(dados[0]) + ', "values": {"umidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}}'
+        print(payload)
         dev.publicar(topicos, payload)
         
 
