@@ -38,7 +38,13 @@ big_frame = pd.concat(dataframe, ignore_index=True, sort=False )
 big_frame = big_frame.sort_values('timestamp')
 
 for element in big_frame.values:
-    mensagem = str(element[0]) + " " + str(element[17]) + " " + str(element[16])
+    formatJson = {
+        "timestamp": str(element[0]),
+        "umidade": str(element[17]),
+        "temperatura": str(element[16])
+    }
+    mensagem = json.dumps(formatJson)
+    #mensagem = str(element[0]) + " " + str(element[17]) + " " + str(element[16])
     print(mensagem)
     producer.send(element[1] +".timestamp.umidade.temperatura", mensagem )
     time.sleep(delta)

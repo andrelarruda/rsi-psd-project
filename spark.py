@@ -36,7 +36,7 @@
     `$ bin/spark-submit examples/src/main/python/sql/streaming/structured_kafka_wordcount.py \
     host1:port1,host2:port2 subscribe topic1,topic2`
     
-    bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.3 /home/rsi-psd-vm/Documents/rsi-psd-project/spark.py 172.16.205.131:9092 subscribe A301.timestamp.umidade.temperatura
+    bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.3 /home/rsi-psd-vm/Documents/rsi-psd-project/spark.py 172.16.205.131:9092 subscribe A301.timestamp.umidade.temperatura, A307.timestamp.umidade.temperatura, A309.timestamp.umidade.temperatura, A322.timestamp.umidade.temperatura, A328.timestamp.umidade.temperatura, A329.timestamp.umidade.temperatura, A341.timestamp.umidade.temperatura, A349.timestamp.umidade.temperatura, A350.timestamp.umidade.temperatura, A351.timestamp.umidade.temperatura, A357.timestamp.umidade.temperatura, A366.timestamp.umidade.temperatura, A370.timestamp.umidade.temperatura
     A301.timestamp.umidade.temperatura, A307.timestamp.umidade.temperatura, A309.timestamp.umidade.temperatura, A322.timestamp.umidade.temperatura, A328.timestamp.umidade.temperatura, A329.timestamp.umidade.temperatura, A341.timestamp.umidade.temperatura, A349.timestamp.umidade.temperatura, A350.timestamp.umidade.temperatura, A351.timestamp.umidade.temperatura, A357.timestamp.umidade.temperatura, A366.timestamp.umidade.temperatura, A370.timestamp.umidade.temperatura
 
 """
@@ -78,9 +78,8 @@ if __name__ == "__main__":
         .option(subscribeType, topics)\
         .load() \
         .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
-    lines.printSchema()
-'''
-
+    
+    lines.select('word').collect()
     # Split the lines into words
     words = lines.select(
         # explode turns each item in an array into a separate row
@@ -88,6 +87,14 @@ if __name__ == "__main__":
             split(lines.value, ' ')
         ).alias('word')
     )
+    print(lines.select('word').show())
+    '''
+    query = words\
+        .writeStream\
+        .format('console')\
+        .start()
+
+    query.awaitTermination()
 
     # Generate running word count
     #wordCounts = words.groupBy('word')
