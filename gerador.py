@@ -47,6 +47,6 @@ for element in big_frame.values:
     }
     mensagem = json.dumps(formatJson)
     #mensagem = str(element[0]) + " " + str(element[17]) + " " + str(element[16])
-    print(mensagem)
+    print(str(mensagem))
     producer.send(element[1] +".timestamp.umidade.temperatura", mensagem )
     time.sleep(delta)

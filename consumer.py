@@ -48,12 +48,12 @@ while True:
         topicos = temp.split(".")
         dados   = message.value
         dados   = dados.split(" ")
-        print(message)
+        print(message.value)
         
         # Thingsboard's messages
         payload = '{"ts":' + str(dados[0]) + ', "values": {"umidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}}'
-        print(payload)
-        dev.publicar(topicos, message)#payload)
+        #print(payload)
+        dev.publicar(topicos, message.value)#payload)
         
 
 

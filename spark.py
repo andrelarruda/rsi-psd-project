@@ -79,8 +79,8 @@ if __name__ == "__main__":
         .load() \
         .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
     
-    lines.select('word').collect()
-    # Split the lines into words
+    print(lines.first())
+    '''
     words = lines.select(
         # explode turns each item in an array into a separate row
         explode(
@@ -94,7 +94,6 @@ if __name__ == "__main__":
         .start()
 
     query.awaitTermination()
-'''
     # Generate running word count
     #wordCounts = words.groupBy('word')
     #wordCounts.show()
