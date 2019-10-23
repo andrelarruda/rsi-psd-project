@@ -87,15 +87,14 @@ if __name__ == "__main__":
             split(lines.value, ' ')
         ).alias('word')
     )
-    print(lines.select('word').show())
-    '''
+    
     query = words\
         .writeStream\
         .format('console')\
         .start()
 
     query.awaitTermination()
-
+'''
     # Generate running word count
     #wordCounts = words.groupBy('word')
     #wordCounts.show()

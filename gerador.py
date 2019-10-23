@@ -39,9 +39,11 @@ big_frame = big_frame.sort_values('timestamp')
 
 for element in big_frame.values:
     formatJson = {
-        "timestamp": str(element[0]),
+        "ts": str(element[0]),
+        "values": {
         "umidade": str(element[17]),
         "temperatura": str(element[16])
+        }
     }
     mensagem = json.dumps(formatJson)
     #mensagem = str(element[0]) + " " + str(element[17]) + " " + str(element[16])
