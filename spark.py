@@ -55,7 +55,7 @@ devices = {'A301': "f4bCXGwj9Mk6cArVwJSc", 'A307': "ngC1wVtcAS6eRDxjmLjF",
         'A366': "trVoVWjZVZDmvQmidTd9", 'A370': "oxI6WhQeVvQBmDR2YZa0"}
 
 if __name__ == "__main__":
-    if len(sys.argv) != 4:
+    if len(sys.argv) < 4:
         print("""
         Usage: structured_kafka_wordcount.py <bootstrap-servers> <subscribe-type> <topics>
         """, file=sys.stderr)
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     bootstrapServers = sys.argv[1] #'172.16.205.131:9092'
     subscribeType = sys.argv[2]    
     topics = sys.argv[3]
-
+    
     spark = SparkSession\
         .builder\
         .appName("StructuredKafkaWordCount")\
@@ -79,26 +79,29 @@ if __name__ == "__main__":
         .load() \
         .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
     
-    print(lines.first())
-    '''
-    words = lines.select(
-        # explode turns each item in an array into a separate row
-        explode(
-            split(lines.value, ' ')
-        ).alias('word')
-    )
-    
-    query = words\
-        .writeStream\
+    query = lines.select("value").writeStream\
         .format('console')\
+        .outputMode('complete')\
         .start()
+    
+    # words = lines.select(
+    #     # explode turns each item in an array into a separate row
+    #     explode(
+    #         split(lines.value, ' ')
+    #     ).alias('word')
+    # )
+    
+    # query = words\
+    #     .writeStream\
+    #     .format('console')\
+    #     .start()
 
     query.awaitTermination()
     # Generate running word count
     #wordCounts = words.groupBy('word')
     #wordCounts.show()
     #words = words.groupBy('word')
-    
+    '''
     # Start running the query that prints the running counts to the console
     query = words\
         .writeStream\
