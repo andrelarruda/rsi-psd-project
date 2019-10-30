@@ -36,9 +36,7 @@
     `$ bin/spark-submit examples/src/main/python/sql/streaming/structured_kafka_wordcount.py \
     host1:port1,host2:port2 subscribe topic1,topic2`
     
-    bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.3 /home/rsi-psd-vm/Documents/rsi-psd-project/spark.py 172.16.205.131:9092 subscribe A301.timestamp.umidade.temperatura, A307.timestamp.umidade.temperatura, A309.timestamp.umidade.temperatura, A322.timestamp.umidade.temperatura, A328.timestamp.umidade.temperatura, A329.timestamp.umidade.temperatura, A341.timestamp.umidade.temperatura, A349.timestamp.umidade.temperatura, A350.timestamp.umidade.temperatura, A351.timestamp.umidade.temperatura, A357.timestamp.umidade.temperatura, A366.timestamp.umidade.temperatura, A370.timestamp.umidade.temperatura
-    A301.timestamp.umidade.temperatura, A307.timestamp.umidade.temperatura, A309.timestamp.umidade.temperatura, A322.timestamp.umidade.temperatura, A328.timestamp.umidade.temperatura, A329.timestamp.umidade.temperatura, A341.timestamp.umidade.temperatura, A349.timestamp.umidade.temperatura, A350.timestamp.umidade.temperatura, A351.timestamp.umidade.temperatura, A357.timestamp.umidade.temperatura, A366.timestamp.umidade.temperatura, A370.timestamp.umidade.temperatura
-
+    bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.3 /home/rsi-psd-vm/Documents/rsi-psd-project/spark.py localhost:9092 subscribe A301.timestamp.umidade.temperatura,A307.timestamp.umidade.temperatura,A309.timestamp.umidade.temperatura,A322.timestamp.umidade.temperatura,A328.timestamp.umidade.temperatura,A329.timestamp.umidade.temperatura,A341.timestamp.umidade.temperatura,A349.timestamp.umidade.temperatura,A350.timestamp.umidade.temperatura,A351.timestamp.umidade.temperatura,A357.timestamp.umidade.temperatura,A366.timestamp.umidade.temperatura,A370.timestamp.umidade.temperatura
 """
 from __future__ import print_function
 
@@ -47,6 +45,9 @@ import sys
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import explode
 from pyspark.sql.functions import split
+
+def processRow(row):
+    print(row)
 
 devices = {'A301': "f4bCXGwj9Mk6cArVwJSc", 'A307': "ngC1wVtcAS6eRDxjmLjF", 
         'A309': "7W00vXj4nqYvzhrB1y3J", 'A322': "au7bVNpWPgho0jEEQSZ5", 'A328': "AWTccpmlqqvtsuDcC9ma", 
@@ -64,7 +65,7 @@ if __name__ == "__main__":
     bootstrapServers = sys.argv[1] #'172.16.205.131:9092'
     subscribeType = sys.argv[2]    
     topics = sys.argv[3]
-    
+
     spark = SparkSession\
         .builder\
         .appName("StructuredKafkaWordCount")\
@@ -75,14 +76,18 @@ if __name__ == "__main__":
         .readStream\
         .format("kafka")\
         .option("kafka.bootstrap.servers", bootstrapServers)\
+        .option("startingOffsets", "latest")\
         .option(subscribeType, topics)\
         .load() \
         .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
     
-    query = lines.select("value").writeStream\
-        .format('console')\
-        .outputMode('complete')\
+    data = lines.select(lines.value)
+
+    query = data.writeStream\
+        .outputMode('update')\
+        .foreach(processRow)\
         .start()
+
     
     # words = lines.select(
     #     # explode turns each item in an array into a separate row
