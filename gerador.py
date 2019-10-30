@@ -9,7 +9,7 @@ import time
 import variaveis
 
 # speedupFactor = int(input("Digite o fator de aceleração: "))
-speedupFactor = 3600 #Para fins de teste, este valor será fixo.
+speedupFactor = 720 #Para fins de teste, este valor será fixo.
 delta = 3600/speedupFactor #delta = interval/speedup factor
 
 producer = KafkaProducer(bootstrap_servers='localhost:9092', 
@@ -42,11 +42,16 @@ for element in big_frame.values:
         "ts": str(element[0]),
         "values": {
         "umidade": str(element[17]),
-        "temperatura": str(element[16])
+        "temperatura": str(element[16]),
+        "stationCode": str(element[1]),
+        "stationName": str(element[2]),
+        "latitude": str(element[3]),
+        "longitude": str(element[4])
         }
     }
     mensagem = json.dumps(formatJson)
+    
     #mensagem = str(element[0]) + " " + str(element[17]) + " " + str(element[16])
-    print(str(mensagem))
+    print("Sent: " + (mensagem))
     producer.send(element[1] +".timestamp.umidade.temperatura", mensagem )
     time.sleep(delta)

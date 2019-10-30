@@ -36,18 +36,51 @@
     `$ bin/spark-submit examples/src/main/python/sql/streaming/structured_kafka_wordcount.py \
     host1:port1,host2:port2 subscribe topic1,topic2`
     
+    172.16.205.48
+
     bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.3 /home/rsi-psd-vm/Documents/rsi-psd-project/spark.py localhost:9092 subscribe A301.timestamp.umidade.temperatura,A307.timestamp.umidade.temperatura,A309.timestamp.umidade.temperatura,A322.timestamp.umidade.temperatura,A328.timestamp.umidade.temperatura,A329.timestamp.umidade.temperatura,A341.timestamp.umidade.temperatura,A349.timestamp.umidade.temperatura,A350.timestamp.umidade.temperatura,A351.timestamp.umidade.temperatura,A357.timestamp.umidade.temperatura,A366.timestamp.umidade.temperatura,A370.timestamp.umidade.temperatura
 """
 from __future__ import print_function
 
 import sys
+import json
+import requests
 
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import explode
 from pyspark.sql.functions import split
 
+THINGSBOARD_HOST = '127.0.0.1'
+THINGSBOARD_PORT = '9090'
+ACCESS_TOKEN = 'cDwums8X04nNp5zh3fjX'
+url = 'http://' + THINGSBOARD_HOST + ':' + THINGSBOARD_PORT + '/api/v1/' + ACCESS_TOKEN + '/telemetry'
+
+def calcularHeatIndex(tc, rh):
+    t = (1.8*tc) + 32 
+    firstHeatIndex = (1.1*t) - 10.3 + (0.047*rh)
+
+    if (firstHeatIndex < 80):
+        result = firstHeatIndex
+    else:
+        firstHeatIndex = -42.379 + (2.04901523 * t) + (10.14333127 * rh) - (0.22475541 * t * rh) - (6.83783 * (10**-3) * (t**2)) - (5.481717 * (10**-2) * (rh**2)) + (1.22874 * (10**-3) * (t**2) * rh) + (8.5282 * (10**-4) * t * (rh**2)) - (1.99 * (10**-6) * (t**2) * (rh**2))
+        if ( ((t >= 80) and (t <= 112)) and (rh<=13)):
+            result = firstHeatIndex - (3.25 - (0.25 * rh)) * (( (17 - abs(t-95))/17) ** 0.5)
+        elif ( ((t >= 80) and (t <= 87)) and (rh > 85)):
+            result = firstHeatIndex + (0.02 * (rh - 85) * (87 - 5))
+        else:
+            result = firstHeatIndex
+
+    return (result-32)/1.8
+
 def processRow(row):
-    print(row)
+    meu_json = json.loads(row["value"])
+    values = (meu_json["values"])
+    temperatura = float(values["temperatura"])
+    umidade = float(values["umidade"])
+    heat_index = calcularHeatIndex(temperatura, umidade)
+    print("Temperatura: " + str(temperatura) + " Umidade: " + str(umidade) + " HI: " + str(heat_index))
+    # requests.post(url, json=heat_index)
+
 
 devices = {'A301': "f4bCXGwj9Mk6cArVwJSc", 'A307': "ngC1wVtcAS6eRDxjmLjF", 
         'A309': "7W00vXj4nqYvzhrB1y3J", 'A322': "au7bVNpWPgho0jEEQSZ5", 'A328': "AWTccpmlqqvtsuDcC9ma", 
@@ -83,11 +116,19 @@ if __name__ == "__main__":
     
     data = lines.select(lines.value)
 
-    query = data.writeStream\
+    query = data\
+        .writeStream\
         .outputMode('update')\
         .foreach(processRow)\
         .start()
 
+    # query = data\
+    #     .writeStream\
+    #     .outputMode('append')\
+    #     .format('console')\
+    #     .start()
+
+    query.awaitTermination()
     
     # words = lines.select(
     #     # explode turns each item in an array into a separate row
@@ -101,7 +142,6 @@ if __name__ == "__main__":
     #     .format('console')\
     #     .start()
 
-    query.awaitTermination()
     # Generate running word count
     #wordCounts = words.groupBy('word')
     #wordCounts.show()
