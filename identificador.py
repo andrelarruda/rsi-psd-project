@@ -1,5 +1,6 @@
 import paho.mqtt.client as mqtt
 import time
+import json
 class Devices():
     def __init__(self):
         self._broker        = "localhost"
@@ -18,18 +19,19 @@ class Devices():
         print("data published to thingsboard \n")
         pass
 
-    def publicar(self, topico, payload):
+    def publicar(self, payload):
         thingsboard = "v1/devices/me/telemetry"
-        code = topico[0]
+        code = json.loads(payload)
+        
         for client in self._clients:
             current_client = str(client._client_id, "UTF8")
-            if current_client == code:
+            if current_client == code["values"]["stationCode"]:
                 client.loop_start()
                 ret = client.publish(thingsboard, payload, retain= True)
                 time.sleep(1)
                 print(ret)
                 break
-
+        
     def connect(self):
 
         for i  in self._tokens.keys():

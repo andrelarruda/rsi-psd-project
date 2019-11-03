@@ -44,16 +44,17 @@ dev = Devices()
 
 while True:
     for message in consumer:
+        #print(message.value)
+        #dados   = message.value
+        #dados   = dados.split(" ")
+        
         temp    = message.topic
         topicos = temp.split(".")
-        dados   = message.value
-        dados   = dados.split(" ")
-        print(message.value)
+        #print(message.value)
         
         # Thingsboard's messages
-        payload = '{"ts":' + str(dados[0]) + ', "values": {"umidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}}'
+        #payload = '{"ts":' + str(dados[0]) + ', "values": {"umidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}}'
         #print(payload)
-        dev.publicar(topicos, message.value)#payload)
-        
+        dev.publicar(message.value)
 
 
