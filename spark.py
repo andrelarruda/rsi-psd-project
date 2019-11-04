@@ -44,16 +44,11 @@ from __future__ import print_function
 
 import sys
 import json
-import requests
 
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import explode
-from pyspark.sql.functions import split
-
-THINGSBOARD_HOST = '127.0.0.1'
-THINGSBOARD_PORT = '9090'
-ACCESS_TOKEN = 'cDwums8X04nNp5zh3fjX'
-url = 'http://' + THINGSBOARD_HOST + ':' + THINGSBOARD_PORT + '/api/v1/' + ACCESS_TOKEN + '/telemetry'
+from identificador          import Devices
+from pyspark.sql            import SparkSession
+from pyspark.sql.functions  import explode
+from pyspark.sql.functions  import split
 
 def calcularHeatIndex(tc, rh):
     t = (1.8*tc) + 32 
@@ -73,21 +68,16 @@ def calcularHeatIndex(tc, rh):
     return (result-32)/1.8
 
 def processRow(row):
-    meu_json = json.loads(row["value"])
-    values = (meu_json["values"])
+    global dev
+    meu_json = eval(row["value"])
+    values = meu_json["values"]
     temperatura = float(values["temperatura"])
     umidade = float(values["umidade"])
     heat_index = calcularHeatIndex(temperatura, umidade)
-    print("Temperatura: " + str(temperatura) + " Umidade: " + str(umidade) + " HI: " + str(heat_index))
-    # requests.post(url, json=heat_index)
-
-
-devices = {'A301': "f4bCXGwj9Mk6cArVwJSc", 'A307': "ngC1wVtcAS6eRDxjmLjF", 
-        'A309': "7W00vXj4nqYvzhrB1y3J", 'A322': "au7bVNpWPgho0jEEQSZ5", 'A328': "AWTccpmlqqvtsuDcC9ma", 
-        'A329': "6VYmn1TgkIurtYwf6BTm", 'A341': "rZJ3TWbrt3iOgkThdRpA", 'A349': "yk64ImmTFJGCR5vNXdVH", 
-        'A350': "TIcmOFfzFzCI70LHbmAj", 'A351': "UPGYIzI32XoEEJ3sZ0Pt", 'A357': "jxs9mO0ZUwzFMi1JXiLs", 
-        'A366': "trVoVWjZVZDmvQmidTd9", 'A370': "oxI6WhQeVvQBmDR2YZa0"}
-
+    meu_json["values"]["HI"] = heat_index
+    print(json.dumps(meu_json))
+    #dev.publicar(meu_json)
+    
 if __name__ == "__main__":
     if len(sys.argv) < 4:
         print("""
@@ -95,6 +85,7 @@ if __name__ == "__main__":
         """, file=sys.stderr)
         sys.exit(-1)
 
+    dev = Devices()
     bootstrapServers = sys.argv[1] #'172.16.205.131:9092'
     subscribeType = sys.argv[2]    
     topics = sys.argv[3]
@@ -121,38 +112,6 @@ if __name__ == "__main__":
         .outputMode('update')\
         .foreach(processRow)\
         .start()
-
-    # query = data\
-    #     .writeStream\
-    #     .outputMode('append')\
-    #     .format('console')\
-    #     .start()
-
-    query.awaitTermination()
     
-    # words = lines.select(
-    #     # explode turns each item in an array into a separate row
-    #     explode(
-    #         split(lines.value, ' ')
-    #     ).alias('word')
-    # )
-    
-    # query = words\
-    #     .writeStream\
-    #     .format('console')\
-    #     .start()
-
-    # Generate running word count
-    #wordCounts = words.groupBy('word')
-    #wordCounts.show()
-    #words = words.groupBy('word')
-    '''
-    # Start running the query that prints the running counts to the console
-    query = words\
-        .writeStream\
-        .outputMode('complete')\
-        .format('console')\
-        .start()
-
+    print(query)
     query.awaitTermination()
-    '''

@@ -25,7 +25,6 @@ class Devices():
         for client in self._clients:
             current_client = str(client._client_id, "UTF8")
             if current_client == code["values"]["stationCode"]:
-                #client.loop_start()
                 ret = client.publish(thingsboard, str(payload), retain= True)
                 print(ret)
                 break
