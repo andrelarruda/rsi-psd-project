@@ -44,8 +44,8 @@ from __future__ import print_function
 
 import sys
 import json
+import requests
 
-from identificador          import Devices
 from pyspark.sql            import SparkSession
 from pyspark.sql.functions  import explode
 from pyspark.sql.functions  import split
@@ -68,15 +68,16 @@ def calcularHeatIndex(tc, rh):
     return (result-32)/1.8
 
 def processRow(row):
-    global dev
+    url = "http://localhost:9090/api/v1/bebRER3KoAx6d0gWkt56/telemetry"
     meu_json = eval(row["value"])
     values = meu_json["values"]
     temperatura = float(values["temperatura"])
     umidade = float(values["umidade"])
     heat_index = calcularHeatIndex(temperatura, umidade)
     meu_json["values"]["HI"] = heat_index
-    print(json.dumps(meu_json))
-    #dev.publicar(meu_json)
+    print(meu_json)
+    retorno = requests.post(url, json.dumps(meu_json))
+    print(retorno)
     
 if __name__ == "__main__":
     if len(sys.argv) < 4:
@@ -84,8 +85,7 @@ if __name__ == "__main__":
         Usage: structured_kafka_wordcount.py <bootstrap-servers> <subscribe-type> <topics>
         """, file=sys.stderr)
         sys.exit(-1)
-
-    dev = Devices()
+   
     bootstrapServers = sys.argv[1] #'172.16.205.131:9092'
     subscribeType = sys.argv[2]    
     topics = sys.argv[3]
@@ -106,7 +106,6 @@ if __name__ == "__main__":
         .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
     
     data = lines.select(lines.value)
-
     query = data\
         .writeStream\
         .outputMode('update')\
