@@ -38,6 +38,14 @@ const cities={
     lat:-8.509552,
     long:-37.711591
   },
+  Serra_Talhada:{
+    lat:-7.954277,
+    long:-38.295082
+  },
+  Floresta:{
+    lat:-8.598785,
+    long:-38.584062
+  },
   
 
 
