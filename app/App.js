@@ -1,7 +1,30 @@
 import React from 'react';
+const axios = require('axios')
 import { StyleSheet, Text, View,TouchableOpacity,TextInput } from 'react-native';
 
 export default function App() {
+
+
+  function estacao(){
+  axios.get('http://172.16.205.131:3333/:lat/:long')
+  .then(function (response) {
+    // handle success
+    console.log(response.data);
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+  })
+  .finally(function () {
+    // always executed
+  });
+  }
+
+
+
+
+
+
   return (
     <View  style={styles.container}>
       <Text style={styles.h1Text}>Calculador de IH</Text>
@@ -10,7 +33,7 @@ export default function App() {
       <TextInput style={styles.input} placeholder="Latitude" placeholderTextColor="black"></TextInput>
       
       </View>
-      <TouchableOpacity style={styles.button}><Text style={styles.textButton}>Calcular</Text></TouchableOpacity>
+      <TouchableOpacity onPress={()=>estacao()} style={styles.button}><Text style={styles.textButton}>Calcular</Text></TouchableOpacity>
       <Text style={styles.txtResult}>Resultado: 10 </Text>
 
 
