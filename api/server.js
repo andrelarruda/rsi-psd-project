@@ -63,23 +63,31 @@ const cities={
 
 
 
-function getDistance(lat1,lat2,long1,long2){
+function getDistance(lat1,lat2,lon1,lon2){
 
-
-const raioTerra=6371
-
-let dLat = (lat2-lat1) //diferença das latitudes dos pontos em radianos
-let dLon = (long2-long1) //diferença das longitudes dos pontos em radianos
-let a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon/2) * Math.sin(dLon/2)
-let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-let distancia = raioTerra * c;
-
-return distancia;
+  Number.prototype.toRad = function() {
+    return this * Math.PI / 180;
+ }
+ 
+ 
+ var R = 6371; // km 
+ //has a problem with the .toRad() method below.
+ var x1 = lat2-lat1;
+ var dLat = x1.toRad();  
+ var x2 = lon2-lon1;
+ var dLon = x2.toRad();  
+ var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
+                 Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
+                 Math.sin(dLon/2) * Math.sin(dLon/2);  
+ var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+ var d = R * c; 
+ 
+return d
 
 }
 
-let resposta= getDistance(-7.9970741,-8.014858,-34.927654,-34.949444)
 
+let resposta= getDistance(-8.1617581,-34.920084,-8.1627533,-34.9172833)
 console.log(resposta)
 
 app.get('/:lat/:long',(req,res)=>{
