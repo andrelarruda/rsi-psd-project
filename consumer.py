@@ -3,17 +3,7 @@ from json   import loads
 
 import paho.mqtt.client as paho 
 import time
-
-#from __future__ import print_function
-
-import sys
-
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import explode
-from pyspark.sql.functions import split
-
-topicos = []
-dados   = None
+from identificador import Devices
 
 # Spark Config
 if __name__ == "__main__":
@@ -49,27 +39,17 @@ if __name__ == "__main__":
         ).alias('word')
     )
 # bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.3 /home/rsi-psd-vm/Documents/rsi-psd-project/consumer.py localhost:9092 subscribe A301.umidade.temperatura
-'''
+
 # Thingsboard log
 def on_publish(client, userdata, result):
     print("data published to thingsboard \n")
     pass
 
-# Paho Config const
-ACCESS_TOKEN    = "kgWZAdFuWLc8DJRpjkfG"  
-BROKER          = "localhost"
-PORT            = 1883 
-
 # Kafka Config const
-CLIENT_NAME     = "control1"
-SERVER          = "localhost:9092"
+
+SERVER          = "localhost:9092" #"172.16.205.131:9092"
 AUTO_OFFSET     = "latest"
 MY_GROUP        = "my-group"
-
-client1 = paho.Client(CLIENT_NAME)  
-client1.connect(BROKER, PORT, keepalive=60)
-client1.username_pw_set(ACCESS_TOKEN)
-client1.on_publish = on_publish 
 
 # Consumer Config
 consumer = KafkaConsumer(
@@ -81,20 +61,10 @@ consumer = KafkaConsumer(
 
 consumer.subscribe(pattern="^.*timestamp.umidade.temperatura")
 
-client1.loop_start()
+dev = Devices()
 
-for message in consumer:
-    temp    = message.topic
-    topicos = temp.split(".")
-    dados   = message.value
-    dados   = dados.split(" ")
-    
-    # Thingsboard's messages
-    payload = '{"ts":' + str(dados[0]) + ', "values": {"humidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}}'
-    print(payload)
-    ret = client1.publish("v1/devices/me/telemetry", payload)
-    time.sleep(5)
+while True:
+    for message in consumer:
+        #print(message.value)
+        dev.publicar(message.value)
 
-client1.loop_stop()
-
-'''
