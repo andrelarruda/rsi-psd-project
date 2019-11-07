@@ -11,7 +11,7 @@ def on_publish(client, userdata, result):
     pass
 
 # Kafka Config const
-SERVER          = "172.16.205.131:9092"
+SERVER          = "localhost:9092"#"172.16.205.131:9092"
 AUTO_OFFSET     = "latest"
 MY_GROUP        = "my-group"
 
