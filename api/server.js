@@ -61,9 +61,11 @@ const cities={
 }
 
 
+function teste(){
+  console.log(cities.Recife)
+}
 
-
-function getDistance(lat1,lat2,lon1,lon2){
+function getDistance(lat1,lon1,lat2,lon2){
 
   Number.prototype.toRad = function() {
     return this * Math.PI / 180;
@@ -85,13 +87,12 @@ function getDistance(lat1,lat2,lon1,lon2){
 return d
 
 }
-
-
-let resposta= getDistance(-8.1617581,-34.920084,-8.1627533,-34.9172833)
+-8.054293 , -34.913951
+-8.038888,-34.941928
+let resposta= getDistance(-8.054293,-34.913951,-8.038888,-34.941928)
 console.log(resposta)
-
 app.get('/:lat/:long',(req,res)=>{
-
+  
     const {lat,long}=req.params
     return res.send(long)
 
