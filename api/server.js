@@ -2,6 +2,11 @@ const express= require('express')
 const app= express()
 const axios = require('axios')
 
+
+
+
+
+
 const cities={
 
   Recife:{
@@ -60,20 +65,11 @@ const cities={
   },
 }
 
-
-function teste(){
-  console.log(cities.Recife)
-}
-
 function getDistance(lat1,lon1,lat2,lon2){
-
   Number.prototype.toRad = function() {
     return this * Math.PI / 180;
  }
- 
- 
- var R = 6371; // km 
- //has a problem with the .toRad() method below.
+ var R = 6371; 
  var x1 = lat2-lat1;
  var dLat = x1.toRad();  
  var x2 = lon2-lon1;
@@ -87,14 +83,29 @@ function getDistance(lat1,lon1,lat2,lon2){
 return d
 
 }
--8.054293 , -34.913951
--8.038888,-34.941928
-let resposta= getDistance(-8.054293,-34.913951,-8.038888,-34.941928)
-console.log(resposta)
+
+function getCidadeMenorDistancia(lat,lon,cidades){
+  let cidadeMaisProxima;
+  let distancia=0;
+  
+  for (cidade in cidades){
+    let resultado=getDistance(cities[cidade].lat,cities[cidade].long,lat,lon)
+    if(resultado>distancia){
+      distancia=resultado
+      cidadeMaisProxima=cidade
+    }else{
+      continue
+    }
+    return cidadeMaisProxima
+  }
+}
+ let res=getCidadeMenorDistancia(-8.054293,-34.913951,cities)
+ console.log(res)
 app.get('/:lat/:long',(req,res)=>{
   
     const {lat,long}=req.params
-    return res.send(long)
+    const resposta=getCidadeMenorDistancia(parseFloat(lat),parseFloat(long),cities)
+    return res.send(resposta)
 
 })
 

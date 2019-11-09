@@ -1,30 +1,44 @@
-import React from 'react';
+import React,{Component} from 'react';
 const axios = require('axios')
 import { StyleSheet, Text, View,TouchableOpacity,TextInput } from 'react-native';
 
-export default function App() {
+type Props={};
+export default class App extends Component<Props>{
+  constructor(props){
+    super(props)
+     this.state={resultado:"2"};
+    this.estacao= this.estacao.bind(this)
+  }
 
+  estado={
+    resultado:""
+  }
+  
+   estacao(){
+  
+   
+  axios.get('http://192.168.0.101:3333/-8.054293/-34.913951')
+  .then( (response => {
+    var r= this.state
+    r.resultado=response.data
+    this.setState(r)
 
-  function estacao(){
-  axios.get('http://172.16.205.131:3333/:lat/:long')
-  .then(function (response) {
-    // handle success
-    console.log(response.data);
-  })
-  .catch(function (error) {
+})) .catch(function (error) {
     // handle error
     console.log(error);
   })
-  .finally(function () {
-    // always executed
-  });
-  }
+ 
+}
 
 
+  
 
 
+  
 
 
+render(){
+  
   return (
     <View  style={styles.container}>
       <Text style={styles.h1Text}>Calculador de IH</Text>
@@ -33,13 +47,14 @@ export default function App() {
       <TextInput style={styles.input} placeholder="Latitude" placeholderTextColor="black"></TextInput>
       
       </View>
-      <TouchableOpacity onPress={()=>estacao()} style={styles.button}><Text style={styles.textButton}>Calcular</Text></TouchableOpacity>
-      <Text style={styles.txtResult}>Resultado: 10 </Text>
+      <TouchableOpacity onPress={this.estacao} style={styles.button}><Text style={styles.textButton}>Calcular</Text></TouchableOpacity>
+      <Text style={styles.txtResult}>{this.state.resultado}</Text>
 
 
 
     </View>
   );
+}
 }
 
 const styles = StyleSheet.create({
@@ -89,4 +104,5 @@ const styles = StyleSheet.create({
     marginBottom:100
     
   }
-});
+
+})
