@@ -6,7 +6,7 @@ type Props={};
 export default class App extends Component<Props>{
   constructor(props){
     super(props)
-     this.state={resultado:"2"};
+     this.state={resultado:"2",lat ,lon};
     this.estacao= this.estacao.bind(this)
   }
 
