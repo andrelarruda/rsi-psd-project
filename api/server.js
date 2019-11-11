@@ -84,23 +84,23 @@ return d
 
 }
 
-function getCidadeMenorDistancia(lat,lon,cidades){
-  let cidadeMaisProxima;
-  let distancia=0;
+
+ function getCidadeMenorDistancia(lat,lon,cidades){
+  var cidadeMaisProxima
+  let distancia=1000000000;
   
+
   for (cidade in cidades){
     let resultado=getDistance(cities[cidade].lat,cities[cidade].long,lat,lon)
-    if(resultado>distancia){
+    if(resultado<distancia){
       distancia=resultado
       cidadeMaisProxima=cidade
-    }else{
-      continue
+    
     }
     return cidadeMaisProxima
   }
 }
- let res=getCidadeMenorDistancia(-8.054293,-34.913951,cities)
- console.log(res)
+let resultado = getCidadeMenorDistancia(-8.0580556,-39.096111,cities)
 app.get('/:lat/:long',(req,res)=>{
   
     const {lat,long}=req.params

@@ -6,7 +6,7 @@ type Props={};
 export default class App extends Component<Props>{
   constructor(props){
     super(props)
-     this.state={resultado:"2",lat ,lon};
+     this.state={resultado:""};
     this.estacao= this.estacao.bind(this)
   }
 
@@ -17,7 +17,7 @@ export default class App extends Component<Props>{
    estacao(){
   
    
-  axios.get('http://192.168.0.101:3333/-8.054293/-34.913951')
+  axios.get('http://192.168.0.107:3333/-7.236069/-35.98555')
   .then( (response => {
     var r= this.state
     r.resultado=response.data
