@@ -6,7 +6,8 @@ type Props={};
 export default class App extends Component<Props>{
   constructor(props){
     super(props)
-     this.state={resultado:""};
+     this.state={resultado:"" , lat:"",long:""};
+     
     this.estacao= this.estacao.bind(this)
   }
 
@@ -17,7 +18,8 @@ export default class App extends Component<Props>{
    estacao(){
   
    
-  axios.get('http://192.168.0.107:3333/-7.236069/-35.98555')
+  axios.get(`http://192.168.0.104:3333/${this.state.lat}/${this.state.long}`)
+  
   .then( (response => {
     var r= this.state
     r.resultado=response.data
@@ -30,21 +32,14 @@ export default class App extends Component<Props>{
  
 }
 
-
-  
-
-
-  
-
-
 render(){
   
   return (
     <View  style={styles.container}>
       <Text style={styles.h1Text}>Calculador de IH</Text>
       <View style={styles.inputBox}>
-      <TextInput style={styles.input} placeholder="Longitude" placeholderTextColor="black"></TextInput>
-      <TextInput style={styles.input} placeholder="Latitude" placeholderTextColor="black"></TextInput>
+      <TextInput style={styles.input} placeholder="Longitude" placeholderTextColor="black" onChangeText={(lat=>{this.setState({lat})})} ></TextInput>
+      <TextInput style={styles.input} placeholder="Latitude" placeholderTextColor="black" onChangeText={(long=>{this.setState({long})})}></TextInput>
       
       </View>
       <TouchableOpacity onPress={this.estacao} style={styles.button}><Text style={styles.textButton}>Calcular</Text></TouchableOpacity>
