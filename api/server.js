@@ -88,19 +88,23 @@ return d
  function getCidadeMenorDistancia(lat,lon,cidades){
   var cidadeMaisProxima
   let distancia=1000000000;
-  
+  var cont= 0;
 
   for (cidade in cidades){
+    var c=Object.values(cidades)
+    var latitude=c[cont].lat
+    var logitude=c[cont].long
     let resultado=getDistance(cities[cidade].lat,cities[cidade].long,lat,lon)
     if(resultado<distancia){
       distancia=resultado
       cidadeMaisProxima=cidade
     
     }
-    return cidadeMaisProxima
+    
   }
+  return cidadeMaisProxima
 }
-let resultado = getCidadeMenorDistancia(-8.0580556,-39.096111,cities)
+let resultado = getCidadeMenorDistancia(-7.9871701,-38.3358901,cities)
 app.get('/:lat/:long',(req,res)=>{
   
     const {lat,long}=req.params
