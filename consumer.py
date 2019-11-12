@@ -1,9 +1,9 @@
-from kafka  import KafkaConsumer
-from json   import loads
+from kafka          import KafkaConsumer
+from json           import loads
+from identificador  import Devices
 
 import time
 import sys
-from identificador import Devices
 
 # Thingsboard log
 def on_publish(client, userdata, result):
@@ -30,4 +30,3 @@ while True:
     for message in consumer:
         #print(message.value)
         dev.publicar(message.value)
-

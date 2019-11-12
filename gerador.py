@@ -2,18 +2,22 @@
 from kafka import KafkaProducer
 import json
 from time import sleep
-from datetime import datetime
 import pandas as pd
 import os
 import time
 import variaveis
 
-# speedupFactor = int(input("Digite o fator de aceleração: "))
-speedupFactor = 720 #Para fins de teste, este valor será fixo.
-delta = 3600/speedupFactor #delta = interval/speedup factor
-
-producer = KafkaProducer(bootstrap_servers='localhost:9092', 
-value_serializer=lambda v: str(v).encode('utf-8'))
+try:
+    #speedupFactor = int(input("Digite o fator de aceleração: "))
+    speedupFactor = 720 #Para fins de teste, este valor será fixo.
+    delta = 3600/speedupFactor #delta = interval/speedup factor
+except ZeroDivisionError:
+    print("Zero Division error!")
+except ValueError:
+    print("Invalid input format!")
+    
+producer            = KafkaProducer(bootstrap_servers='localhost:9092', 
+value_serializer    = lambda v: str(v).encode('utf-8'))
 
 arquivos = ["A301.csv", "A307.csv", "A309.csv", "A322.csv", "A328.csv", "A329.csv", "A341.csv", "A349.csv", "A350.csv", 
 "A351.csv", "A357.csv", "A366.csv", "A370.csv"]
@@ -50,6 +54,6 @@ for element in big_frame.values:
         }
     }
     mensagem = json.dumps(formatJson)
-    print("Sent: " + (mensagem))
     producer.send(element[1] +".timestamp.umidade.temperatura", mensagem )
+    print("Sent: " + (mensagem))
     time.sleep(delta)
