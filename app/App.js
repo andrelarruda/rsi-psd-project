@@ -18,7 +18,7 @@ export default class App extends Component<Props>{
    estacao(){
   
    
-  axios.get(`http://192.168.0.104:3333/${this.state.lat}/${this.state.long}`)
+  axios.get(`http://192.168.0.100:3333/${this.state.lat}/${this.state.long}`)
   
   .then( (response => {
     var r= this.state
