@@ -48,15 +48,34 @@ import requests
 
 from pyspark.sql import SparkSession
 class Devices():
-    def __init__(self):
-        self.__broker        = "localhost"
-        self.__port          = "9090"
-        self.__tokens        = {'A301': "f4bCXGwj9Mk6cArVwJSc", 'A307': "ngC1wVtcAS6eRDxjmLjF", 
+
+    def __init__(self, broker = "localhost", port = "9090"):
+        self.__broker   = broker
+        self.__port     = port
+        self.__tokens   = {'A301': "f4bCXGwj9Mk6cArVwJSc", 'A307': "ngC1wVtcAS6eRDxjmLjF", 
         'A309': "7W00vXj4nqYvzhrB1y3J", 'A322': "au7bVNpWPgho0jEEQSZ5", 'A328': "AWTccpmlqqvtsuDcC9ma", 
         'A329': "6VYmn1TgkIurtYwf6BTm", 'A341': "rZJ3TWbrt3iOgkThdRpA", 'A349': "yk64ImmTFJGCR5vNXdVH", 
         'A350': "TIcmOFfzFzCI70LHbmAj", 'A351': "UPGYIzI32XoEEJ3sZ0Pt", 'A357': "jxs9mO0ZUwzFMi1JXiLs", 
         'A366': "trVoVWjZVZDmvQmidTd9", 'A370': "oxI6WhQeVvQBmDR2YZa0"}
     
+    @staticmethod
+    def calcularHeatIndex(tc, rh):
+        t = (1.8*tc) + 32 
+        firstHeatIndex = (1.1*t) - 10.3 + (0.047*rh)
+
+        if (firstHeatIndex < 80):
+            result = firstHeatIndex
+        else:
+            firstHeatIndex = -42.379 + (2.04901523 * t) + (10.14333127 * rh) - (0.22475541 * t * rh) - (6.83783 * (10**-3) * (t**2)) - (5.481717 * (10**-2) * (rh**2)) + (1.22874 * (10**-3) * (t**2) * rh) + (8.5282 * (10**-4) * t * (rh**2)) - (1.99 * (10**-6) * (t**2) * (rh**2))
+            if ( ((t >= 80) and (t <= 112)) and (rh<=13)):
+                result = firstHeatIndex - (3.25 - (0.25 * rh)) * (( (17 - abs(t-95))/17) ** 0.5)
+            elif ( ((t >= 80) and (t <= 87)) and (rh > 85)):
+                result = firstHeatIndex + (0.02 * (rh - 85) * (87 - 5))
+            else:
+                result = firstHeatIndex
+
+        return (result-32)/1.8
+
     def on_publish(self, client, userdata, result):
         print("data published to thingsboard \n")
         pass
@@ -69,7 +88,7 @@ class Devices():
 
     def __getPort(self):
         return self.__port
-
+    
     def publicar(self, payload):
         broker      = self.__getBroker()
         tokensList  = self.__getTokens()
@@ -80,30 +99,13 @@ class Devices():
         
         retorno = requests.post(url, json.dumps(payload))
         print(retorno)
-
-def calcularHeatIndex(tc, rh):
-    t = (1.8*tc) + 32 
-    firstHeatIndex = (1.1*t) - 10.3 + (0.047*rh)
-
-    if (firstHeatIndex < 80):
-        result = firstHeatIndex
-    else:
-        firstHeatIndex = -42.379 + (2.04901523 * t) + (10.14333127 * rh) - (0.22475541 * t * rh) - (6.83783 * (10**-3) * (t**2)) - (5.481717 * (10**-2) * (rh**2)) + (1.22874 * (10**-3) * (t**2) * rh) + (8.5282 * (10**-4) * t * (rh**2)) - (1.99 * (10**-6) * (t**2) * (rh**2))
-        if ( ((t >= 80) and (t <= 112)) and (rh<=13)):
-            result = firstHeatIndex - (3.25 - (0.25 * rh)) * (( (17 - abs(t-95))/17) ** 0.5)
-        elif ( ((t >= 80) and (t <= 87)) and (rh > 85)):
-            result = firstHeatIndex + (0.02 * (rh - 85) * (87 - 5))
-        else:
-            result = firstHeatIndex
-
-    return (result-32)/1.8
-
+    
 def processRow(row): # tratar os dados de cada linha
     meu_json    = eval(row["value"]) # converte unicode em string
     values      = meu_json["values"]
     temperatura = float(values["temperatura"])
     umidade     = float(values["umidade"])
-    heat_index  = calcularHeatIndex(temperatura, umidade) # calcula o Heat Index
+    heat_index  = Devices.calcularHeatIndex(temperatura, umidade) # calcula o Heat Index
     
     meu_json["values"]["HI"] = heat_index
     dev = Devices()
@@ -136,6 +138,7 @@ if __name__ == "__main__":
         .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
     
     data = lines.select(lines.value)
+    
     query = data\
         .writeStream\
         .outputMode('update')\
