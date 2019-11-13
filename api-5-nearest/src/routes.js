@@ -1,33 +1,21 @@
 const routes = require('express').Router();
-const cities = require('./data/cities.json');
+const data = require('./db/data.json');
 const servicos = require('./services/servicos');
 
 routes.get('/', (req, res) => {
-	res.json({message: 'hello world!'});
+	res.json({message: 'This is the entry point. For data, you must make a post request to the following URL: localhost:3001/api/5nearest/:lat/:long'});
 });
 
 routes.get('/api/cities', (req, res)=> {
-	res.json(cities);
+	res.json(data);
 });
 
-routes.post('/api/5nearest', (req, res) => {
-	cityList = cities.cities;
-	let cidade = {}
-	const { nome, lat, long } = req.body;
+routes.post('/api/5nearest/', (req, res) => {
+	const cidade = req.body;
 
-	const recife = {
-		nome: "Recife",
-		lat: -8.05428,
-		long: -34.8813,
-	}
-
-	const distancia = servicos.getDistance(lat, long, recife.lat, recife.long);
+	const result = servicos.get5Nearest(cidade.lat, cidade.long, data.cities);
 	
-	// for (let i = 0 ; i < cityList.length ; i++){
-		
-	// }
-
-	return res.json({distancia});
+	return res.json(result);
 });
 
 module.exports = routes;

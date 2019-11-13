@@ -17,32 +17,20 @@ function getDistance(lat1, lon1, lat2, lon2) {
 
 }
 
-function getCidadeByName(listaCidades, nome){
-	let result;
-	for (let i = 0 ; i < listaCidades.length ; i++){
-		if (listaCidades[i].nome == nome){
-			result = listaCidades[i];
-			break;
-		}
+function get5Nearest(lat, lon, cidades) {
+	// cidades - JSON Array
+	let distancias = []
+
+	for (let i = 0 ; i < cidades.length ; i++){
+		distancias[i] = cidades[i];
+		distancias[i].distancia = getDistance(lat, lon, cidades[i].lat, cidades[i].long);
 	}
-	return result;
+
+	distancias.sort( function(a, b){
+		return a.distancia-b.distancia;
+	});
+
+	return distancias.slice(0, 5);
 }
 
-function getCidadeMenorDistancia(lat, lon, cidades) {
-	var cidadeMaisProxima
-	let distancia = 1000000000;
-
-
-	for (cidade in cidades) {
-		let resultado = getDistance(cidades[cidade].lat, cidades[cidade].long, lat, lon)
-		if (resultado < distancia) {
-			distancia = resultado
-			cidadeMaisProxima = cidade
-
-		}
-
-	}
-	return cidadeMaisProxima
-}
-
-module.exports = {getCidadeMenorDistancia,getDistance}
+module.exports = { get5Nearest, getDistance }
