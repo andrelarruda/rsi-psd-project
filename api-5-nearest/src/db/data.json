@@ -1,79 +1,70 @@
 {
 	"cities": [
 		{
-			"id": 1,
 			"nome": "Recife",
 			"lat": -8.05928,
 			"long": -34.959239
 		},
 		{
-			"id": 2,
 			"nome": "Petrolina",
 			"lat": -9.388323,
 			"long": -40.523262
 		},
 		{
-			"id": 3,
 			"nome": "Arcoverde",
 			"lat": -8.433544,
 			"long": -37.055477
 		},
 		{
-			"id": 4,
 			"nome": "Garanhuns",
 			"lat": -8.91095,
 			"long": -36.493381
 		},
 		{
-			"id": 5,
 			"nome": "Surubim",
 			"lat": -7.839628,
 			"long": -35.801056
 		},
 		{
-			"id": 6,
 			"nome": "Cabrobo",
 			"lat": -8.504,
 			"long": -39.31528
 		},
 		{
-			"id": 7,
 			"nome": "Caruaru",
 			"lat": -8.236069,
 			"long": -35.98555
 		},
 		{
-			"id": 8,
 			"nome": "Ibimirim",
 			"lat": -8.509552,
 			"long": -37.711591
 		},
 		{
-			"id": 9,
 			"nome": "Serra Talhada",
 			"lat": -7.954277,
 			"long": -38.295082
 		},
 		{
-			"id": 10,
+
 			"nome": "Floresta",
 			"lat": -8.598785,
 			"long": -38.584062
 		},
 		{
-			"id": 11,
+
 			"nome": "Palmares",
 			"lat": -8.666667,
 			"long": -35.567921
 		},
 		{
-			"id": 12,
+
 			"nome": "Ouricuri",
 			"lat": -7.885833,
 			"long": -40.102683
 		},
 		{
-			"id": 13,
+
 			"nome": "Salgueiro",
 			"lat": -8.0580556,
 			"long": -39.096111
