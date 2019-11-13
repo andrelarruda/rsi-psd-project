@@ -7,15 +7,28 @@ import os
 import time
 import variaveis
 
-try:
-    #speedupFactor = int(input("Digite o fator de aceleração: "))
-    speedupFactor = 720 #Para fins de teste, este valor será fixo.
-    delta = 3600/speedupFactor #delta = interval/speedup factor
-except ZeroDivisionError:
-    print("Zero Division error!")
-except ValueError:
-    print("Invalid input format!")
+def inputInit(exit, speedupFactor):
+    delta = 0
     
+    if exit:
+        return speedupFactor
+    else:
+        try:
+            speedupFactor = int(input("Digite o fator de aceleração: "))
+            #speedupFactor = 720 #Para fins de teste, este valor será fixo.
+            delta = 3600/speedupFactor #delta = interval/speedup factor
+            exit = True
+            return inputInit(exit, delta)
+            
+        except ZeroDivisionError:
+            print("Zero Division error!")
+            return(inputInit(False, delta))
+        except ValueError:
+            print("Invalid input format!")
+            return(inputInit(False, delta))
+        
+# Main Program
+speedupFactor       = inputInit(False, 0)    
 producer            = KafkaProducer(bootstrap_servers='localhost:9092', 
 value_serializer    = lambda v: str(v).encode('utf-8'))
 
@@ -56,4 +69,4 @@ for element in big_frame.values:
     mensagem = json.dumps(formatJson)
     producer.send(element[1] +".timestamp.umidade.temperatura", mensagem )
     print("Sent: " + (mensagem))
-    time.sleep(delta)
+    time.sleep(speedupFactor)

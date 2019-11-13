@@ -1,6 +1,7 @@
 import requests
 import time
 import json
+
 class Devices():
     
     def __init__(self):
