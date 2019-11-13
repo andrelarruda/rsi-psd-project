@@ -1,14 +1,13 @@
-from kafka  import KafkaConsumer
-from json   import loads
+from kafka          import KafkaConsumer
+from json           import loads
+from identificador  import Devices
 
 import time
 import sys
-from identificador import Devices
 
-# Thingsboard log
-def on_publish(client, userdata, result):
-    print("data published to thingsboard \n")
-    pass
+dev = Devices()
+print(dev)
+exit()
 
 # Kafka Config const
 SERVER          = "localhost:9092"#"172.16.205.131:9092"
@@ -24,10 +23,8 @@ consumer = KafkaConsumer(
      value_deserializer = lambda v: v.decode('utf-8'))
 
 consumer.subscribe(pattern="^.*timestamp.umidade.temperatura")
-dev = Devices()
 
 while True:
     for message in consumer:
         #print(message.value)
         dev.publicar(message.value)
-
