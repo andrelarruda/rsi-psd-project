@@ -1,0 +1,28 @@
+{
+  "name": "api-5-nearest",
+  "version": "1.0.0",
+  "description": "This is an API that given a location coords it returns the five nearest station coords.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node",
+    "dev": "nodemon",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "5 nearest stations",
+    "5 nearest",
+    "rsi-psd",
+    "rsi",
+    "psd",
+    "UFRPE"
+  ],
+  "author": "André Luiz R. Arruda <andrebass27@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4"
+  }
+}
