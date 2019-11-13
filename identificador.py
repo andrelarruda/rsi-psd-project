@@ -7,6 +7,7 @@ class Devices():
     def __init__(self):
         self.__broker        = "localhost"
         self.__port          = "9090"
+        self.__url           = ""
         self.__tokens        = {'A301': "f4bCXGwj9Mk6cArVwJSc", 'A307': "ngC1wVtcAS6eRDxjmLjF", 
         'A309': "7W00vXj4nqYvzhrB1y3J", 'A322': "au7bVNpWPgho0jEEQSZ5", 'A328': "AWTccpmlqqvtsuDcC9ma", 
         'A329': "6VYmn1TgkIurtYwf6BTm", 'A341': "rZJ3TWbrt3iOgkThdRpA", 'A349': "yk64ImmTFJGCR5vNXdVH", 
@@ -16,6 +17,12 @@ class Devices():
     def on_publish(self, client, userdata, result):
         print("data published to thingsboard \n")
         pass
+
+    def __getUrl(self):
+        return self.__url
+    
+    def __setUrl(self, newUrl):
+        self.__url = newUrl
 
     def __getTokens(self):
         return self.__tokens
@@ -34,6 +41,16 @@ class Devices():
         payload = json.loads(payload)
         token   = tokensList[payload["values"]["stationCode"]]
         url     = "http://" + broker + ":"+ port + "/api/v1/"+token+"/telemetry"
+        self.__setUrl(url)
         
         retorno = requests.post(url, json.dumps(payload))
         print(retorno)
+    
+    def __str__(self):
+        currentDevice = self.__getUrl()
+        if currentDevice == "":
+            brk = self.__getBroker()
+            prt = self.__getPort()
+            return brk + ":" + prt
+        else:
+            return currentDevice
