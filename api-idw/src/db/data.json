@@ -1,0 +1,29 @@
+{
+	"cities": [
+		{
+			"nome": "Recife",
+			"hi": 21,
+			"distancia":5
+		},
+		{
+			"nome": "Petrolina",
+			"hi": 45,
+			"distancia":10
+		},
+		{
+			"nome": "Arcoverde",
+			"hi": 1,
+			"distancia":2
+		},
+		{
+			"nome": "Garanhuns",
+			"hi": 5,
+			"distancia":3
+		},
+		{
+			"nome": "Surubim",
+			"hi": 6,
+			"distancia":7
+		}
+	]
+}

@@ -10,10 +10,10 @@ routes.get('/api/cities', (req, res)=> {
 	res.json(data);
 });
 
-routes.post('/api/5nearest/', (req, res) => {
-	const cidade = req.body;
+routes.get('/api/5nearest/:lat/:long', (req, res) => {
+	const { lat, long } = req.params
 
-	const result = servicos.get5Nearest(cidade.lat, cidade.long, data.cities);
+	const result = servicos.get5Nearest(parseFloat(lat),parseFloat(long), data.cities);
 	
 	return res.json(result);
 });
