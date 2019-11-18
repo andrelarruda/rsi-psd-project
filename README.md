@@ -18,6 +18,15 @@
 6 - git checkout develop
 7 - realizar o pull request no github.com 
 ```
-# referências:
+
+# Sobre o Projeto:
+* Este projeto tem por finalidade por em prática conceitos de sistemas distribuidos, ou seja, alguns componentes foram projetados para rodar em maquinas distintas em uma mesma rede.
+
+OBS: A plataforma do thingsboard precisará ser configurada da forma que desejar desde que, os tokens sejam alterados em código
+
+# Referências:
 - [Guia prático](https://rogerdudler.github.io/git-guide/index.pt_BR.html)
 - [Documentação](https://git-scm.com/doc)
+- [Kafka](https://kafka.apache.org/)
+- [Spark](https://spark.apache.org/)
+- [Docker](https://docs.docker.com/)
