@@ -20,7 +20,7 @@ export default class App extends Component<Props>{
 
 
   async nearest(){
-   await axios.get(`http://192.168.0.107:3001/api/5nearest/${this.state.lat}/${this.state.long}`)
+   await axios.get(`http://172.16.205.131:3001/api/5nearest/${this.state.lat}/${this.state.long}`)
     .then( (response => {
       var j= this.state
       j.json=response.data
@@ -34,7 +34,7 @@ export default class App extends Component<Props>{
   async mediaHI(){
     await axios({
       method: 'post', // verbo http
-      url: 'http://192.168.0.107:3003/cities', // url
+      url: 'http://172.16.205.131:3003/cities', // url
       data:this.state.json,
     })
     .then(response => {
@@ -56,6 +56,8 @@ render(){
       
       </View>
       <TouchableOpacity onPress={this.nearest} style={styles.button}><Text style={styles.textButton}>Calcular</Text></TouchableOpacity>
+      <Text style={styles.txtResult}>Resultado</Text>
+
       <Text style={styles.txtResult}>{this.state.resultado}</Text>
 
 
@@ -95,7 +97,6 @@ const styles = StyleSheet.create({
   },
   txtResult:{
     fontSize:20,
-    marginTop:70
   },
   textButton:{
     fontSize:15,
