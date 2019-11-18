@@ -3,8 +3,8 @@ const servicos = require('./services/servico');
 const data = require('./db/data.json');
 
 
-routes.get('/', (req, res) => {
-	var resultado=servicos.idw(data.cities)
+routes.post('/cities', (req, res) => {
+	var resultado=servicos.idw(req.body)
 	return res.send(String(resultado))
 });
 

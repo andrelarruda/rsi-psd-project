@@ -1,4 +1,5 @@
 import React,{Component} from 'react';
+const servicos = require('./src/services/servicos')
 const axios = require('axios')
 import { StyleSheet, Text, View,TouchableOpacity,TextInput } from 'react-native';
 
@@ -6,34 +7,46 @@ type Props={};
 export default class App extends Component<Props>{
   constructor(props){
     super(props)
-     this.state={resultado:"" , lat:"",long:""};
+     this.state={resultado:"" , lat:"",long:"",json:""};
      
-    this.estacao= this.estacao.bind(this)
+    this.mediaHI= this.mediaHI.bind(this)
+    this.nearest= this.nearest.bind(this)
+
   }
 
   estado={
     resultado:""
   }
-  
-   estacao(){
-  
-   
-  axios.get(`http://192.168.0.100:3333/${this.state.lat}/${this.state.long}`)
-  
-  .then( (response => {
-    var r= this.state
-    r.resultado=response.data
-    this.setState(r)
 
-})) .catch(function (error) {
-    // handle error
-    console.log(error);
-  })
- 
-}
 
+  async nearest(){
+   await axios.get(`http://192.168.0.107:3001/api/5nearest/${this.state.lat}/${this.state.long}`)
+    .then( (response => {
+      var j= this.state
+      j.json=response.data
+      this.setState(j)
+  })) .catch(function (error) {
+      // handle error
+      console.log(error);
+    })
+    this.mediaHI()
+  }
+  async mediaHI(){
+    await axios({
+      method: 'post', // verbo http
+      url: 'http://192.168.0.107:3003/cities', // url
+      data:this.state.json,
+    })
+    .then(response => {
+      var r = this.state
+      r.resultado= JSON.stringify(response.data)
+      this.setState(r)   
+    })
+    .catch(error => {
+        console.log(error)
+    })
+  }
 render(){
-  
   return (
     <View  style={styles.container}>
       <Text style={styles.h1Text}>Calculador de IH</Text>
@@ -42,7 +55,7 @@ render(){
       <TextInput style={styles.input} placeholder="Latitude" placeholderTextColor="black" onChangeText={(long=>{this.setState({long})})}></TextInput>
       
       </View>
-      <TouchableOpacity onPress={this.estacao} style={styles.button}><Text style={styles.textButton}>Calcular</Text></TouchableOpacity>
+      <TouchableOpacity onPress={this.nearest} style={styles.button}><Text style={styles.textButton}>Calcular</Text></TouchableOpacity>
       <Text style={styles.txtResult}>{this.state.resultado}</Text>
 
 

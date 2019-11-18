@@ -3,71 +3,84 @@
 		{
 			"nome": "Recife",
 			"lat": -8.05928,
-			"long": -34.959239
+			"long": -34.959239,
+			"hi" : 10
 		},
 		{
 			"nome": "Petrolina",
 			"lat": -9.388323,
-			"long": -40.523262
+			"long": -40.523262,
+			"hi" : 20
 		},
 		{
 			"nome": "Arcoverde",
 			"lat": -8.433544,
-			"long": -37.055477
+			"long": -37.055477,
+			"hi" : 30
 		},
 		{
 			"nome": "Garanhuns",
 			"lat": -8.91095,
-			"long": -36.493381
+			"long": -36.493381,
+			"hi" : 35
 		},
 		{
 			"nome": "Surubim",
 			"lat": -7.839628,
-			"long": -35.801056
+			"long": -35.801056,
+			"hi" : 100
 		},
 		{
 			"nome": "Cabrobo",
 			"lat": -8.504,
-			"long": -39.31528
+			"long": -39.31528,
+			"hi" : 65
 		},
 		{
 			"nome": "Caruaru",
 			"lat": -8.236069,
-			"long": -35.98555
+			"long": -35.98555,
+			"hi" : 32
 		},
 		{
 			"nome": "Ibimirim",
 			"lat": -8.509552,
-			"long": -37.711591
+			"long": -37.711591,
+			"hi" : 54
 		},
 		{
 			"nome": "Serra Talhada",
 			"lat": -7.954277,
-			"long": -38.295082
+			"long": -38.295082,
+			"hi" : 30
 		},
 		{
 
 			"nome": "Floresta",
 			"lat": -8.598785,
-			"long": -38.584062
+			"long": -38.584062,
+			"hi" : 45
 		},
 		{
 
 			"nome": "Palmares",
 			"lat": -8.666667,
-			"long": -35.567921
+			"long": -35.567921,
+			"hi" : 165
 		},
 		{
 
 			"nome": "Ouricuri",
 			"lat": -7.885833,
-			"long": -40.102683
+			"long": -40.102683,
+			"hi" : 45
 		},
 		{
 
 			"nome": "Salgueiro",
 			"lat": -8.0580556,
-			"long": -39.096111
+			"long": -39.096111,
+			"hi" :65
 		}
 	]
 }
