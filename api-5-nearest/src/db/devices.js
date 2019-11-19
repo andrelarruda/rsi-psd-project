@@ -1,15 +1,17 @@
+// Aqui ficam os IDs dos devices de cada cidade
+
 module.exports = {
-	Recife:"raincife",
-	Petrolina:"petrolina-juazeiro",
+	Recife:"67f61240-0a2c-11ea-a698-0bc6fc91ecdf",
+	Petrolina:"",
 	Arcoverde:"",
-	Garanhuns:"garanhão",
-	Surubim:"suruba",
+	Garanhuns:"",
+	Surubim:"",
 	Cabrobo:"",
-	Caruaru:"caruá",
+	Caruaru:"",
 	Ibimirim:"",
-	"Serra Talhada":"serra taiada",
+	"Serra Talhada":"",
 	Floresta:"",
-	Palmares:"palmas",
+	Palmares:"77f00580-0a58-11ea-bd97-470d24539586",
 	Ouricuri:"",
 	Salgueiro:""
 }
