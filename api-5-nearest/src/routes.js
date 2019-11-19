@@ -28,22 +28,13 @@ routes.get('/teste', async (req, res) => {
 
 	//setar o id do Device
 	const deviceID = "67f61240-0a2c-11ea-a698-0bc6fc91ecdf"
+	// const deviceID = "77f00580-0a58-11ea-bd97-470d24539586" //device 'another'
 
-	// FAZ REQUISIÇÃO DO TOKEN - OK
-	const requisicaoToken = await axios({
-		method: 'post',
-		url: 'http://localhost:9090/api/auth/login',
-		data: {
-			username: "tenant@thingsboard.org", password: "tenant"
-		},
-	})
+	TOKEN = await servicos.getToken();
 
-	TOKEN = requisicaoToken.data.token;
-
-	xAuthorization = 'Bearer ' + TOKEN;
-
-	instance.defaults.headers.common['X-Authorization'] = xAuthorization;
-	instance.get(`/api/plugins/telemetry/DEVICE/${deviceID}/values/timeseries?keys=HI,umidade,temperatura`)
+	instance.defaults.headers.common['X-Authorization'] = 'Bearer ' + TOKEN;
+	// instance.get(`/api/plugins/telemetry/DEVICE/${deviceID}/values/timeseries?keys=umidade,temperatura,lat,long`)
+	instance.get(`/api/plugins/telemetry/DEVICE/${deviceID}/values/timeseries?keys=umidade,temperatura&startTs=1555200&endTs=1574121600&agg=AVG`)
 		.then(response => {
 			// console.log(response)
 			return res.status(200).json(response.data);
