@@ -88,4 +88,4 @@ async function determinaHICadaCidade(listaCidades) {
 	return listaCidades;
 }
 
-module.exports = { get5Nearest, getDistance, getToken, determinaHICadaCidade, consultarDeviceTB }
+module.exports = { get5Nearest, getDistance, getToken, determinaHICadaCidade }
