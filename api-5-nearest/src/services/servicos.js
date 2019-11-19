@@ -1,4 +1,6 @@
 const axios = require('axios');
+const devicesID = require('../db/devices');
+const data = require('../db/data.json')
 
 function getDistance(lat1, lon1, lat2, lon2) {
 	Number.prototype.toRad = function () {
@@ -48,4 +50,35 @@ async function getToken(){
 	return requisicaoToken.data.token;
 }
 
-module.exports = { get5Nearest, getDistance, getToken }
+async function consultarTB(listaCidades){
+	TOKEN = await getToken();
+
+	const proximos = get5Nearest(-8.11278, -35.01472, data.cities);
+	
+	for (let i = 0; i < listaCidades.length; i++){
+		cidade = listaCidades[i];
+
+		//setar o id do Device
+		let idDevice = devicesID[cidade.nome];
+		// const deviceID = "77f00580-0a58-11ea-bd97-470d24539586" //device 'another'
+	}
+
+	return proximos;
+
+	
+
+
+	instance.defaults.headers.common['X-Authorization'] = 'Bearer ' + TOKEN;
+	// instance.get(`/api/plugins/telemetry/DEVICE/${deviceID}/values/timeseries?keys=umidade,temperatura,lat,long`)
+	instance.get(`/api/plugins/telemetry/DEVICE/${deviceID}/values/timeseries?keys=umidade,temperatura&startTs=1555200&endTs=1574121600&agg=AVG`)
+		.then(response => {
+			// console.log(response)
+			return res.status(200).json(response.data);
+		})
+		.catch(err => {
+			//console.log(err);
+			return res.status(401).json(err)
+		});
+}
+
+module.exports = { get5Nearest, getDistance, getToken, consultarTB }
