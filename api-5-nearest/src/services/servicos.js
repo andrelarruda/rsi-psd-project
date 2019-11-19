@@ -1,6 +1,5 @@
 const axios = require('axios');
 const devicesID = require('../db/devices');
-const data = require('../db/data.json')
 const instance = axios.create({
 	baseURL: 'http://localhost:9090'
 });

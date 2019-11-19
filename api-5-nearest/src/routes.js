@@ -1,11 +1,6 @@
 const routes = require('express').Router();
 const data = require('./db/data.json');
 const servicos = require('./services/servicos');
-const axios = require('axios').default;
-const instance = axios.create({
-	baseURL: 'http://localhost:9090'
-});
-let TOKEN = null;
 
 routes.get('/', (req, res) => {
 	res.json({ message: 'This is just the entry point. For data, you must make a get request to the following URL: localhost:3001/api/5nearest/:lat/:long' });
