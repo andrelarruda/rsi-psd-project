@@ -1,3 +1,5 @@
+const axios = require('axios');
+
 function getDistance(lat1, lon1, lat2, lon2) {
 	Number.prototype.toRad = function () {
 		return this * Math.PI / 180;
@@ -33,4 +35,17 @@ function get5Nearest(lat, lon, cidades) {
 	return distancias.slice(0, 5);
 }
 
-module.exports = { get5Nearest, getDistance }
+async function getToken(){
+	// FAZ REQUISIÇÃO DO TOKEN - OK
+	const requisicaoToken = await axios({
+		method: 'post',
+		url: 'http://localhost:9090/api/auth/login',
+		data: {
+			username: "tenant@thingsboard.org", password: "tenant"
+		},
+	})
+
+	return requisicaoToken.data.token;
+}
+
+module.exports = { get5Nearest, getDistance, getToken }
