@@ -9,7 +9,7 @@ module.exports = {
 	Cabrobo:"c47f69e0-e5fa-11e9-bebd-e35bcf2d23e2",
 	Caruaru:"d37d4de0-e5fa-11e9-bebd-e35bcf2d23e2",
 	Ibimirim:"e790ec10-e5fa-11e9-bebd-e35bcf2d23e2",
-	Serra_Talhada:"f56718f0-e5fa-11e9-bebd-e35bcf2d23e2",
+	"Serra Talhada":"f56718f0-e5fa-11e9-bebd-e35bcf2d23e2",
 	Floresta:"ffe986f0-e5fa-11e9-bebd-e35bcf2d23e2",
 	Palmares:"0c9f4fb0-e5fb-11e9-bebd-e35bcf2d23e2",
 	Ouricuri:"16c08ae0-e5fb-11e9-bebd-e35bcf2d23e2",
