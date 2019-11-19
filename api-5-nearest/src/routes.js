@@ -15,19 +15,23 @@ routes.get('/api/cities', (req, res) => {
 	res.json(data);
 });
 
-routes.get('/api/5nearest/:lat/:long', (req, res) => {
+routes.get('/api/5nearest/:lat/:long', async (req, res) => {
 	const { lat, long } = req.params
 
-	const result = servicos.get5Nearest(parseFloat(lat), parseFloat(long), data.cities);
+	let estacoesProximas = servicos.get5Nearest(parseFloat(lat), parseFloat(long), data.cities);
 
-	return res.json(result);
+	let estacoesProximasComHI = await servicos.determinaHICadaCidade(estacoesProximas);
+
+	return res.json(estacoesProximasComHI);
 });
 
 
 routes.get('/teste', async (req, res) => {
 
+	//determina as 5 cidades próximas de Recife (lat=-8..., long=-34...)
 	let cidades = servicos.get5Nearest(-8.05928, -34.959239, data.cities);
 
+	// pega no TB o hi de cada uma das cidades próximas de Recife e coloca no objeto dessas cidades
 	let result = await servicos.determinaHICadaCidade(cidades);
 
 	return res.send(result);
