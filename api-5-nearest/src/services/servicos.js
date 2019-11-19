@@ -1,6 +1,9 @@
 const axios = require('axios');
 const devicesID = require('../db/devices');
 const data = require('../db/data.json')
+const instance = axios.create({
+	baseURL: 'http://localhost:9090'
+});
 
 function getDistance(lat1, lon1, lat2, lon2) {
 	Number.prototype.toRad = function () {
@@ -25,19 +28,19 @@ function get5Nearest(lat, lon, cidades) {
 	// cidades - JSON Array
 	let distancias = []
 
-	for (let i = 0 ; i < cidades.length ; i++){
+	for (let i = 0; i < cidades.length; i++) {
 		distancias[i] = cidades[i];
 		distancias[i].distancia = getDistance(lat, lon, cidades[i].lat, cidades[i].long);
 	}
 
-	distancias.sort( function(a, b){
-		return a.distancia-b.distancia;
+	distancias.sort(function (a, b) {
+		return a.distancia - b.distancia;
 	});
 
 	return distancias.slice(0, 5);
 }
 
-async function getToken(){
+async function getToken() {
 	// FAZ REQUISIÇÃO DO TOKEN - OK
 	const requisicaoToken = await axios({
 		method: 'post',
@@ -50,35 +53,39 @@ async function getToken(){
 	return requisicaoToken.data.token;
 }
 
-async function consultarTB(listaCidades){
-	TOKEN = await getToken();
-
-	const proximos = get5Nearest(-8.11278, -35.01472, data.cities);
+async function consultarDeviceTB(authToken, idDevice) {
+	instance.defaults.headers.common['X-Authorization'] = 'Bearer ' + authToken;
 	
-	for (let i = 0; i < listaCidades.length; i++){
-		cidade = listaCidades[i];
-
-		//setar o id do Device
-		let idDevice = devicesID[cidade.nome];
-		// const deviceID = "77f00580-0a58-11ea-bd97-470d24539586" //device 'another'
+	let response = null;
+	try{
+		const consultaTB = await instance.get(`/api/plugins/telemetry/DEVICE/${idDevice}/values/timeseries`);
+		response = consultaTB.data;
 	}
-
-	return proximos;
-
+	catch(err){
+		response = err;
+	}
 	
-
-
-	instance.defaults.headers.common['X-Authorization'] = 'Bearer ' + TOKEN;
-	// instance.get(`/api/plugins/telemetry/DEVICE/${deviceID}/values/timeseries?keys=umidade,temperatura,lat,long`)
-	instance.get(`/api/plugins/telemetry/DEVICE/${deviceID}/values/timeseries?keys=umidade,temperatura&startTs=1555200&endTs=1574121600&agg=AVG`)
-		.then(response => {
-			// console.log(response)
-			return res.status(200).json(response.data);
-		})
-		.catch(err => {
-			//console.log(err);
-			return res.status(401).json(err)
-		});
+	return response;
 }
 
-module.exports = { get5Nearest, getDistance, getToken, consultarTB }
+async function determinaHICadaCidade(listaCidades) {
+	TOKEN = await getToken();
+	
+	for (let i = 0; i < listaCidades.length; i++) {
+		cidade = listaCidades[i];
+
+		//obtem o id do Device de acordo com o nome da cidade
+		const idDevice = devicesID[cidade.nome];
+
+		const consultaDevice = await consultarDeviceTB(TOKEN, idDevice);
+
+		// para pegar apenas o valor do HI daquela cidade que tá no TB
+		const hiDevice = consultaDevice["hi"][0]["value"];
+
+		listaCidades[i].hi = Number(hiDevice);
+	}
+
+	return listaCidades;
+}
+
+module.exports = { get5Nearest, getDistance, getToken, determinaHICadaCidade, consultarDeviceTB }

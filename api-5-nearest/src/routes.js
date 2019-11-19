@@ -8,7 +8,7 @@ const instance = axios.create({
 let TOKEN = null;
 
 routes.get('/', (req, res) => {
-	res.json({ message: 'This is the entry point. For data, you must make a post request to the following URL: localhost:3001/api/5nearest/:lat/:long' });
+	res.json({ message: 'This is just the entry point. For data, you must make a get request to the following URL: localhost:3001/api/5nearest/:lat/:long' });
 });
 
 routes.get('/api/cities', (req, res) => {
@@ -26,50 +26,16 @@ routes.get('/api/5nearest/:lat/:long', (req, res) => {
 
 routes.get('/teste', async (req, res) => {
 
-	lista = [{
-		nome: "Recife",
-		lat: -8,
-		long: -34,
-		hi: 88,
-	}, {
-		nome: "Petrolina",
-		lat: -8,
-		long: -34,
-		hi: 88,
-	}, {
-		nome: "Serra Talhada",
-		lat: -8,
-		long: -34,
-		hi: 88,
-	}]
+	let cidades = servicos.get5Nearest(-8.05928, -34.959239, data.cities);
 
-	// let cidades = await servicos.consultarTB(lista);
-	let cida = await servicos.consultarTB(lista);
+	let result = await servicos.determinaHICadaCidade(cidades);
 
-	return res.send(cida)
+	return res.send(result);
 
-	// //setar o id do Device
-	// const deviceID = "67f61240-0a2c-11ea-a698-0bc6fc91ecdf"
-	// // const deviceID = "77f00580-0a58-11ea-bd97-470d24539586" //device 'another'
-
-	// TOKEN = await servicos.getToken();
-
-	// instance.defaults.headers.common['X-Authorization'] = 'Bearer ' + TOKEN;
-	// // instance.get(`/api/plugins/telemetry/DEVICE/${deviceID}/values/timeseries?keys=umidade,temperatura,lat,long`)
-	// instance.get(`/api/plugins/telemetry/DEVICE/${deviceID}/values/timeseries?keys=umidade,temperatura&startTs=1555200&endTs=1574121600&agg=AVG`)
-	// 	.then(response => {
-	// 		// console.log(response)
-	// 		return res.status(200).json(response.data);
-	// 	})
-	// 	.catch(err => {
-	// 		//console.log(err);
-	// 		return res.status(401).json(err)
-	// 	});
-
-
-	// http://localhost:9090/swagger-ui.html#!/telemetry-controller/getTimeseriesKeysUsingGET
-	// https://thingsboard.io/docs/reference/rest-api/
-	// https://thingsboard.io/docs/user-guide/telemetry/#data-query-api
 });
 
 module.exports = routes;
+
+// http://localhost:9090/swagger-ui.html#!/telemetry-controller/getTimeseriesKeysUsingGET
+// https://thingsboard.io/docs/reference/rest-api/
+// https://thingsboard.io/docs/user-guide/telemetry/#data-query-api
