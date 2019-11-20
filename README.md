@@ -24,6 +24,33 @@
 
 OBS: A plataforma do thingsboard precisará ser configurada da forma que desejar desde que, os tokens sejam alterados em código
 
+#Iniciando o APP + Services
+
+- APP
+1-git clone https://github.com/andrelarruda/rsi-psd-project.git
+2-git checkout app
+3-cd app
+4-npm install
+5-npm start
+6- baixar no celular o aplicativo EXPO
+7-Ao iniciar o navegador irá abrir uma pagina contendo um QR CODE
+8-Use o aplicativo EXPO instalado em seu celular para ler o QR code
+
+-Service 5nearest
+1- Volte para a raiz do projeto
+2-cd api-5-nearest
+3-npm install
+4-npm run dev
+
+-Service idw
+1- Volte para a raiz do projeto
+2-cd api-idw
+3-npm install
+4-npm run dev
+
+
+
+
 # Referências:
 - [Guia prático](https://rogerdudler.github.io/git-guide/index.pt_BR.html)
 - [Documentação](https://git-scm.com/doc)
