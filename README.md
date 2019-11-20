@@ -24,7 +24,7 @@
 
 OBS: A plataforma do thingsboard precisará ser configurada da forma que desejar desde que, os tokens sejam alterados em código
 
-#Iniciando o APP + Services
+#Iniciando o APP + Services:
 
 - APP
 1-git clone https://github.com/andrelarruda/rsi-psd-project.git
