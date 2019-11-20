@@ -6,8 +6,6 @@ import time
 import sys
 
 dev = Devices()
-print(dev)
-exit()
 
 # Kafka Config const
 SERVER          = "localhost:9092"#"172.16.205.131:9092"
