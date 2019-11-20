@@ -2,18 +2,35 @@
 from kafka import KafkaProducer
 import json
 from time import sleep
-from datetime import datetime
 import pandas as pd
 import os
 import time
 import variaveis
 
-# speedupFactor = int(input("Digite o fator de aceleração: "))
-speedupFactor = 3600 #Para fins de teste, este valor será fixo.
-delta = 3600/speedupFactor #delta = interval/speedup factor
-
-producer = KafkaProducer(bootstrap_servers='localhost:9092', 
-value_serializer=lambda v: str(v).encode('utf-8'))
+def inputInit(exit, speedupFactor):
+    delta = 0
+    
+    if exit:
+        return speedupFactor
+    else:
+        try:
+            speedupFactor = int(input("Digite o fator de aceleração: "))
+            #speedupFactor = 720 #Para fins de teste, este valor será fixo.
+            delta = 3600/speedupFactor #delta = interval/speedup factor
+            exit = True
+            return inputInit(exit, delta)
+            
+        except ZeroDivisionError:
+            print("Zero Division error!")
+            return(inputInit(False, delta))
+        except ValueError:
+            print("Invalid input format!")
+            return(inputInit(False, delta))
+        
+# Main Program
+speedupFactor       = inputInit(False, 0)    
+producer            = KafkaProducer(bootstrap_servers='localhost:9092', 
+value_serializer    = lambda v: str(v).encode('utf-8'))
 
 arquivos = ["A301.csv", "A307.csv", "A309.csv", "A322.csv", "A328.csv", "A329.csv", "A341.csv", "A349.csv", "A350.csv", 
 "A351.csv", "A357.csv", "A366.csv", "A370.csv"]
@@ -38,7 +55,18 @@ big_frame = pd.concat(dataframe, ignore_index=True, sort=False )
 big_frame = big_frame.sort_values('timestamp')
 
 for element in big_frame.values:
-    mensagem = str(element[0]) + " " + str(element[17]) + " " + str(element[16])
-    print(mensagem)
-    producer.send(element[1] +".timestamp.humidade.temperatura", mensagem )
-    time.sleep(delta)
+    formatJson = {
+        "ts": str(element[0]),
+        "values": {
+        "umidade": str(element[17]),
+        "temperatura": str(element[16]),
+        "stationCode": str(element[1]),
+        "stationName": str(element[2]),
+        "latitude": str(element[3]),
+        "longitude": str(element[4])
+        }
+    }
+    mensagem = json.dumps(formatJson)
+    producer.send(element[1] +".timestamp.umidade.temperatura", mensagem )
+    print("Sent: " + (mensagem))
+    time.sleep(speedupFactor)

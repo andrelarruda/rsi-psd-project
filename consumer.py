@@ -1,32 +1,16 @@
-from kafka  import KafkaConsumer
-from json   import loads
+from kafka          import KafkaConsumer
+from json           import loads
+from identificador  import Devices
 
-import paho.mqtt.client as paho 
 import time
+import sys
 
-topicos = []
-dados   = None
-
-# Thingsboard log
-def on_publish(client, userdata, result):
-    print("data published to thingsboard \n")
-    pass
-
-# Paho Config const
-ACCESS_TOKEN    = "kgWZAdFuWLc8DJRpjkfG"  
-BROKER          = "localhost"
-PORT            = 1883 
+dev = Devices()
 
 # Kafka Config const
-CLIENT_NAME     = "control1"
-SERVER          = "localhost:9092"
+SERVER          = "172.16.205.48:9092"#"172.16.205.131:9092"
 AUTO_OFFSET     = "latest"
 MY_GROUP        = "my-group"
-
-client1 = paho.Client(CLIENT_NAME)  
-client1.connect(BROKER, PORT, keepalive=60)
-client1.username_pw_set(ACCESS_TOKEN)
-client1.on_publish = on_publish 
 
 # Consumer Config
 consumer = KafkaConsumer(
@@ -36,20 +20,9 @@ consumer = KafkaConsumer(
      group_id           = MY_GROUP,
      value_deserializer = lambda v: v.decode('utf-8'))
 
-consumer.subscribe(pattern="^.*timestamp.humidade.temperatura")
+consumer.subscribe(pattern="^.*timestamp.umidade.temperatura")
 
-client1.loop_start()
-
-for message in consumer:
-    temp    = message.topic
-    topicos = temp.split(".")
-    dados   = message.value
-    dados   = dados.split(" ")
-    
-    # Thingsboard's messages
-    payload = '{"ts":' + str(dados[0]) + ', "values": {"humidade":' + str(dados[1]) + ', "temperatura":' + str(dados[-1]) + '}}'
-    print(payload)
-    ret = client1.publish("v1/devices/me/telemetry", payload)
-    time.sleep(5)
-
-client1.loop_stop()
+while True:
+    for message in consumer:
+        #print(message.value)
+        dev.publicar(message.value)
