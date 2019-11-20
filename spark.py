@@ -38,7 +38,7 @@
     
     172.16.205.131:9092
 
-    bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.3 /home/rsi-psd-vm/Documents/rsi-psd-project/spark.py localhost:9092 subscribe A301.timestamp.umidade.temperatura,A307.timestamp.umidade.temperatura,A309.timestamp.umidade.temperatura,A322.timestamp.umidade.temperatura,A328.timestamp.umidade.temperatura,A329.timestamp.umidade.temperatura,A341.timestamp.umidade.temperatura,A349.timestamp.umidade.temperatura,A350.timestamp.umidade.temperatura,A351.timestamp.umidade.temperatura,A357.timestamp.umidade.temperatura,A366.timestamp.umidade.temperatura,A370.timestamp.umidade.temperatura
+    bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.3 /home/rsi-psd-vm/Documents/rsi-psd-project/spark.py 172.16.205.48:9092 subscribe A301.timestamp.umidade.temperatura,A307.timestamp.umidade.temperatura,A309.timestamp.umidade.temperatura,A322.timestamp.umidade.temperatura,A328.timestamp.umidade.temperatura,A329.timestamp.umidade.temperatura,A341.timestamp.umidade.temperatura,A349.timestamp.umidade.temperatura,A350.timestamp.umidade.temperatura,A351.timestamp.umidade.temperatura,A357.timestamp.umidade.temperatura,A366.timestamp.umidade.temperatura,A370.timestamp.umidade.temperatura
 """
 from __future__ import print_function
 
